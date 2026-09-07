@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Times — Popokedex</title>
+  <script>
+    (() => {
+      const v = localStorage.getItem("popo_theme");
+      const dark =
+        v === "dark" ||
+        (v !== "light" && matchMedia("(prefers-color-scheme: dark)").matches);
+      document.documentElement.dataset.theme = dark ? "dark" : "light";
+    })();
+  </script>
+  <link rel="stylesheet" href="../css/app.css">
+  <script type="module" src="../js/pages/plan.js"></script>
+</head>
+<body>
+  <div class="wrap">
+    <header data-shell-header></header>
+    <h1 class="hero" style="padding-bottom:0.5rem"><span data-i18n="nav_team"></span></h1>
+    <div class="panel">
+      <label>
+        <span data-i18n="pick_game"></span>
+        <select id="jogo"></select>
+      </label>
+      <h2 class="section-title" data-i18n="your_team"></h2>
+      <div id="slots" class="team-slots"></div>
+      <div class="toolbar">
+        <button type="button" class="btn" id="btn-rand" data-i18n="randomize"></button>
+        <button type="button" class="btn btn_ghost" id="btn-clear" data-i18n="clear_team"></button>
+        <button type="button" class="btn btn_ghost" id="btn-copy" data-i18n="copy_link"></button>
+        <button type="button" class="btn btn_ghost" id="btn-analise" data-i18n="show_analysis"></button>
+      </div>
+      <div id="analise" class="hidden">
+        <h3 class="section-title" data-i18n="defense"></h3>
+        <div id="defesa" class="analysis-grid"></div>
+        <h3 class="section-title" data-i18n="coverage"></h3>
+        <div id="cobertura" class="analysis-grid"></div>
+      </div>
+    </div>
+    <div class="panel toolbar">
+      <input type="search" id="busca-time" data-i18n-placeholder="search_ph" autocomplete="off">
+    </div>
+    <div id="status" class="status-line" data-i18n="loading"></div>
+    <div id="grade" class="dex-grid"></div>
+    <div id="drawer-bg" class="drawer-bg"></div>
+    <aside id="drawer" class="drawer"></aside>
+    <footer data-shell-footer></footer>
+  </div>
+</body>
+</html>

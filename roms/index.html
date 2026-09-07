@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>ROMs — Popokedex</title>
+  <script>
+    (() => {
+      const v = localStorage.getItem("popo_theme");
+      const dark =
+        v === "dark" ||
+        (v !== "light" && matchMedia("(prefers-color-scheme: dark)").matches);
+      document.documentElement.dataset.theme = dark ? "dark" : "light";
+    })();
+  </script>
+  <link rel="stylesheet" href="../css/app.css">
+  <script type="module" src="../js/pages/roms.js"></script>
+</head>
+<body>
+  <div class="wrap">
+    <header data-shell-header></header>
+    <section class="hero">
+      <h1 data-i18n="card_roms_title"></h1>
+      <p data-i18n="roms_soon"></p>
+      <p class="muted" data-i18n="roms_note"></p>
+    </section>
+    <footer data-shell-footer></footer>
+  </div>
+</body>
+</html>

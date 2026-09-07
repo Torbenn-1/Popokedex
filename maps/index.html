@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Mapas — Popokedex</title>
+  <script>
+    (() => {
+      const v = localStorage.getItem("popo_theme");
+      const dark =
+        v === "dark" ||
+        (v !== "light" && matchMedia("(prefers-color-scheme: dark)").matches);
+      document.documentElement.dataset.theme = dark ? "dark" : "light";
+    })();
+  </script>
+  <link rel="stylesheet" href="../css/app.css">
+  <script type="module" src="../js/pages/maps.js"></script>
+</head>
+<body>
+  <div class="wrap wrap_maps">
+    <header data-shell-header></header>
+    <h1 class="hero" style="padding-bottom:0.5rem"><span data-i18n="nav_maps"></span></h1>
+    <div class="panel toolbar">
+      <label>
+        <span data-i18n="maps_pick"></span>
+        <select id="jogo-mapa"></select>
+      </label>
+      <label class="chk">
+        <input type="checkbox" id="filtro-versao" checked>
+        <span data-i18n="maps_filter_ver"></span>
+      </label>
+      <a class="btn btn_ghost" id="link-pokemaps" href="https://pokemaps.net/maps" target="_blank" rel="noopener noreferrer" data-i18n="maps_pokemaps"></a>
+    </div>
+
+    <div class="maps-stage">
+      <div class="map-viewport panel">
+        <div id="map-stage" class="map-stage-inner">
+          <p class="map-empty muted" data-i18n="maps_empty"></p>
+        </div>
+        <div class="map-hint muted" data-i18n="maps_click_hint"></div>
+      </div>
+
+      <aside class="map-panel panel" aria-label="Map panel">
+        <h2 class="section-title" id="painel-titulo" data-i18n="maps_panel_title"></h2>
+        <p class="muted" id="painel-sub" data-i18n="maps_click_hint"></p>
+        <input type="search" id="busca-area" data-i18n-placeholder="maps_search" autocomplete="off" class="map-search">
+        <ul id="areas" class="area-list"></ul>
+        <h3 class="section-title" data-i18n="maps_encounters"></h3>
+        <div id="encontros" class="muted" data-i18n="maps_empty"></div>
+      </aside>
+    </div>
+
+    <div id="drawer-bg" class="drawer-bg"></div>
+    <aside id="drawer" class="drawer" aria-live="polite"></aside>
+    <footer data-shell-footer></footer>
+  </div>
+</body>
+</html>

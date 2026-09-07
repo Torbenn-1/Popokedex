@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Pokédex — Popokedex</title>
+  <script>
+    (() => {
+      const v = localStorage.getItem("popo_theme");
+      const dark =
+        v === "dark" ||
+        (v !== "light" && matchMedia("(prefers-color-scheme: dark)").matches);
+      document.documentElement.dataset.theme = dark ? "dark" : "light";
+    })();
+  </script>
+  <link rel="stylesheet" href="../css/app.css">
+  <script type="module" src="../js/pages/dex.js"></script>
+</head>
+<body>
+  <div class="wrap wrap_dex">
+    <header data-shell-header></header>
+    <div class="dex-head">
+      <h1 class="hero page-title" style="padding-bottom:0"><span data-i18n="nav_dex"></span></h1>
+      <div class="dex-toggles">
+        <div class="seg" role="group" aria-label="Sprite mode">
+          <button type="button" class="seg__btn" data-sprite="3d">3D</button>
+          <button type="button" class="seg__btn" data-sprite="2d">2D</button>
+        </div>
+        <div class="seg" role="group" aria-label="Layout">
+          <button type="button" class="seg__btn" data-layout="grid" data-i18n="layout_grid">Grade</button>
+          <button type="button" class="seg__btn" data-layout="list" data-i18n="layout_list">Lista</button>
+        </div>
+      </div>
+    </div>
+    <div class="panel toolbar dex-toolbar">
+      <input type="search" id="busca" data-i18n-placeholder="search_ph" autocomplete="off">
+      <label>
+        <span class="muted" data-i18n="filter_type"></span>
+        <select id="filtro-tipo"></select>
+      </label>
+      <label>
+        <span class="muted" data-i18n="filter_gen"></span>
+        <select id="filtro-gen"></select>
+      </label>
+    </div>
+    <div id="status" class="status-line" data-i18n="loading"></div>
+    <div id="grade" class="dex-grid"></div>
+    <div id="drawer-bg" class="drawer-bg"></div>
+    <aside id="drawer" class="drawer drawer_portal" aria-live="polite"></aside>
+    <footer data-shell-footer></footer>
+  </div>
+</body>
+</html>
