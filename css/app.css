@@ -1136,6 +1136,51 @@ body.has-site-foot > .wrap {
   min-height: 280px;
 }
 
+.map-stage-inner_leaflet {
+  height: min(72vh, 640px);
+  min-height: 360px;
+  border-radius: 12px;
+  overflow: hidden;
+}
+
+.map-leaflet {
+  width: 100%;
+  height: 100%;
+  background: #285aa0;
+  z-index: 0;
+}
+
+.map-leaflet .leaflet-tile {
+  image-rendering: pixelated;
+  image-rendering: crisp-edges;
+}
+
+.map-leaflet .leaflet-container {
+  font: inherit;
+  background: #285aa0;
+}
+
+.rby-pin {
+  background: #e3350d;
+  border: 2px solid #fff;
+  border-radius: 50%;
+  width: 14px !important;
+  height: 14px !important;
+  margin-left: -7px !important;
+  margin-top: -7px !important;
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.45);
+}
+
+.rby-pin_ready {
+  background: #2aa3d9;
+}
+
+.rby-pin_on {
+  background: #f8d030;
+  border-color: #1c2430;
+  transform: scale(1.25);
+}
+
 .map-empty {
   display: grid;
   place-items: center;
