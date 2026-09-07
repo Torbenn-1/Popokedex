@@ -1,0 +1,409 @@
+{
+  "game": "frlg",
+  "region": "kanto",
+  "image": "assets/maps/frlg/kanto_full.png",
+  "imageWidth": 6528,
+  "imageHeight": 6400,
+  "maxZoom": 2,
+  "minZoom": -3,
+  "tiles": "assets/maps/frlg/tiles/{z}/{x}/{y}.png",
+  "markers": [
+    {
+      "id": "celadon-city",
+      "label": "Celadon City",
+      "match": [
+        "celadon-city"
+      ],
+      "x": 3360.0,
+      "y": 2240.0,
+      "map": "CeladonCity"
+    },
+    {
+      "id": "cerulean-city",
+      "label": "Cerulean City",
+      "match": [
+        "cerulean-city"
+      ],
+      "x": 4608.0,
+      "y": 960.0,
+      "map": "CeruleanCity"
+    },
+    {
+      "id": "cinnabar-island",
+      "label": "Cinnabar Island",
+      "match": [
+        "cinnabar-island"
+      ],
+      "x": 1152.0,
+      "y": 6240.0,
+      "map": "CinnabarIsland"
+    },
+    {
+      "id": "fuchsia-city",
+      "label": "Fuchsia City",
+      "match": [
+        "fuchsia-city"
+      ],
+      "x": 3456.0,
+      "y": 5120.0,
+      "map": "FuchsiaCity"
+    },
+    {
+      "id": "indigo-plateau-exterior",
+      "label": "Indigo Plateau Exterior",
+      "match": [
+        "indigo-plateau-exterior",
+        "indigo-plateau"
+      ],
+      "x": 192.0,
+      "y": 320.0,
+      "map": "IndigoPlateau_Exterior"
+    },
+    {
+      "id": "lavender-town",
+      "label": "Lavender Town",
+      "match": [
+        "lavender-town"
+      ],
+      "x": 6336.0,
+      "y": 2240.0,
+      "map": "LavenderTown"
+    },
+    {
+      "id": "pallet-town",
+      "label": "Pallet Town",
+      "match": [
+        "pallet-town"
+      ],
+      "x": 1152.0,
+      "y": 4320.0,
+      "map": "PalletTown"
+    },
+    {
+      "id": "pewter-city",
+      "label": "Pewter City",
+      "match": [
+        "pewter-city"
+      ],
+      "x": 1152.0,
+      "y": 1280.0,
+      "map": "PewterCity"
+    },
+    {
+      "id": "route-1",
+      "label": "Route 1",
+      "match": [
+        "route-1",
+        "kanto-route-1"
+      ],
+      "x": 1152.0,
+      "y": 3840.0,
+      "map": "Route1"
+    },
+    {
+      "id": "route-10",
+      "label": "Route 10",
+      "match": [
+        "route-10",
+        "kanto-route-10"
+      ],
+      "x": 6336.0,
+      "y": 1440.0,
+      "map": "Route10"
+    },
+    {
+      "id": "route-11",
+      "label": "Route 11",
+      "match": [
+        "route-11",
+        "kanto-route-11"
+      ],
+      "x": 5568.0,
+      "y": 3520.0,
+      "map": "Route11"
+    },
+    {
+      "id": "route-12",
+      "label": "Route 12",
+      "match": [
+        "route-12",
+        "kanto-route-12"
+      ],
+      "x": 6336.0,
+      "y": 3360.0,
+      "map": "Route12"
+    },
+    {
+      "id": "route-13",
+      "label": "Route 13",
+      "match": [
+        "route-13",
+        "kanto-route-13"
+      ],
+      "x": 5952.0,
+      "y": 4480.0,
+      "map": "Route13"
+    },
+    {
+      "id": "route-14",
+      "label": "Route 14",
+      "match": [
+        "route-14",
+        "kanto-route-14"
+      ],
+      "x": 5184.0,
+      "y": 4800.0,
+      "map": "Route14"
+    },
+    {
+      "id": "route-15",
+      "label": "Route 15",
+      "match": [
+        "route-15",
+        "kanto-route-15"
+      ],
+      "x": 4416.0,
+      "y": 5120.0,
+      "map": "Route15"
+    },
+    {
+      "id": "route-16",
+      "label": "Route 16",
+      "match": [
+        "route-16",
+        "kanto-route-16"
+      ],
+      "x": 2496.0,
+      "y": 2240.0,
+      "map": "Route16"
+    },
+    {
+      "id": "route-17",
+      "label": "Route 17",
+      "match": [
+        "route-17",
+        "kanto-route-17"
+      ],
+      "x": 2304.0,
+      "y": 3680.0,
+      "map": "Route17"
+    },
+    {
+      "id": "route-18",
+      "label": "Route 18",
+      "match": [
+        "route-18",
+        "kanto-route-18"
+      ],
+      "x": 2592.0,
+      "y": 5120.0,
+      "map": "Route18"
+    },
+    {
+      "id": "route-19",
+      "label": "Route 19",
+      "match": [
+        "route-19",
+        "kanto-route-19"
+      ],
+      "x": 3456.0,
+      "y": 5920.0,
+      "map": "Route19"
+    },
+    {
+      "id": "route-2",
+      "label": "Route 2",
+      "match": [
+        "route-2",
+        "kanto-route-2"
+      ],
+      "x": 1152.0,
+      "y": 2240.0,
+      "map": "Route2"
+    },
+    {
+      "id": "route-20",
+      "label": "Route 20",
+      "match": [
+        "route-20",
+        "kanto-route-20"
+      ],
+      "x": 2304.0,
+      "y": 6240.0,
+      "map": "Route20"
+    },
+    {
+      "id": "route-21-north",
+      "label": "Route 21 North",
+      "match": [
+        "route-21-north",
+        "route-21"
+      ],
+      "x": 1152.0,
+      "y": 4880.0,
+      "map": "Route21_North"
+    },
+    {
+      "id": "route-21-south",
+      "label": "Route 21 South",
+      "match": [
+        "route-21-south",
+        "route-21"
+      ],
+      "x": 1152.0,
+      "y": 5680.0,
+      "map": "Route21_South"
+    },
+    {
+      "id": "route-22",
+      "label": "Route 22",
+      "match": [
+        "route-22",
+        "kanto-route-22"
+      ],
+      "x": 384.0,
+      "y": 3232.0,
+      "map": "Route22"
+    },
+    {
+      "id": "route-23",
+      "label": "Route 23",
+      "match": [
+        "route-23",
+        "kanto-route-23"
+      ],
+      "x": 192.0,
+      "y": 1760.0,
+      "map": "Route23"
+    },
+    {
+      "id": "route-24",
+      "label": "Route 24",
+      "match": [
+        "route-24",
+        "kanto-route-24"
+      ],
+      "x": 4608.0,
+      "y": 320.0,
+      "map": "Route24"
+    },
+    {
+      "id": "route-25",
+      "label": "Route 25",
+      "match": [
+        "route-25",
+        "kanto-route-25"
+      ],
+      "x": 5376.0,
+      "y": 160.0,
+      "map": "Route25"
+    },
+    {
+      "id": "route-3",
+      "label": "Route 3",
+      "match": [
+        "route-3",
+        "kanto-route-3"
+      ],
+      "x": 2208.0,
+      "y": 1280.0,
+      "map": "Route3"
+    },
+    {
+      "id": "route-4",
+      "label": "Route 4",
+      "match": [
+        "route-4",
+        "kanto-route-4"
+      ],
+      "x": 3360.0,
+      "y": 960.0,
+      "map": "Route4"
+    },
+    {
+      "id": "route-5",
+      "label": "Route 5",
+      "match": [
+        "route-5",
+        "kanto-route-5"
+      ],
+      "x": 4608.0,
+      "y": 1600.0,
+      "map": "Route5"
+    },
+    {
+      "id": "route-6",
+      "label": "Route 6",
+      "match": [
+        "route-6",
+        "kanto-route-6"
+      ],
+      "x": 4608.0,
+      "y": 3120.0,
+      "map": "Route6"
+    },
+    {
+      "id": "route-7",
+      "label": "Route 7",
+      "match": [
+        "route-7",
+        "kanto-route-7"
+      ],
+      "x": 4032.0,
+      "y": 2240.0,
+      "map": "Route7"
+    },
+    {
+      "id": "route-8",
+      "label": "Route 8",
+      "match": [
+        "route-8",
+        "kanto-route-8"
+      ],
+      "x": 5856.0,
+      "y": 2240.0,
+      "map": "Route8"
+    },
+    {
+      "id": "route-9",
+      "label": "Route 9",
+      "match": [
+        "route-9",
+        "kanto-route-9"
+      ],
+      "x": 5568.0,
+      "y": 960.0,
+      "map": "Route9"
+    },
+    {
+      "id": "saffron-city",
+      "label": "Saffron City",
+      "match": [
+        "saffron-city"
+      ],
+      "x": 4752.0,
+      "y": 2360.0,
+      "map": "SaffronCity"
+    },
+    {
+      "id": "vermilion-city",
+      "label": "Vermilion City",
+      "match": [
+        "vermilion-city"
+      ],
+      "x": 4608.0,
+      "y": 3760.0,
+      "map": "VermilionCity"
+    },
+    {
+      "id": "viridian-city",
+      "label": "Viridian City",
+      "match": [
+        "viridian-city"
+      ],
+      "x": 1152.0,
+      "y": 3200.0,
+      "map": "ViridianCity"
+    }
+  ]
+}

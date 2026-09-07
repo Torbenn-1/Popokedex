@@ -1,0 +1,24 @@
+{
+  "tileSize": 256,
+  "minZoom": 0,
+  "maxZoom": 5,
+  "imageWidth": 12800,
+  "imageHeight": 6128,
+  "worldSize": 8192,
+  "content": {
+    "offsetX": 0,
+    "offsetY": 2135,
+    "width": 8192,
+    "height": 3922,
+    "scale": 0.64
+  },
+  "tileUrl": "{z}/{x}/{y}.png",
+  "tilesPerZoom": {
+    "0": 1,
+    "1": 4,
+    "2": 16,
+    "3": 64,
+    "4": 256,
+    "5": 1024
+  }
+}

@@ -1,0 +1,539 @@
+{
+  "game": "rse",
+  "region": "hoenn",
+  "image": "assets/maps/rse/hoenn_full.png",
+  "imageWidth": 12800,
+  "imageHeight": 6128,
+  "maxZoom": 2,
+  "minZoom": -3,
+  "tiles": "assets/maps/rse/tiles/{z}/{x}/{y}.png",
+  "markers": [
+    {
+      "id": "dewford-town",
+      "label": "Dewford Town",
+      "match": [
+        "dewford-town"
+      ],
+      "x": 1120.0,
+      "y": 5952.0,
+      "map": "DewfordTown"
+    },
+    {
+      "id": "ever-grande-city",
+      "label": "Ever Grande City",
+      "match": [
+        "ever-grande-city"
+      ],
+      "x": 12480.0,
+      "y": 3520.0,
+      "map": "EverGrandeCity"
+    },
+    {
+      "id": "fallarbor-town",
+      "label": "Fallarbor Town",
+      "match": [
+        "fallarbor-town"
+      ],
+      "x": 1440.0,
+      "y": 160.0,
+      "map": "FallarborTown"
+    },
+    {
+      "id": "fortree-city",
+      "label": "Fortree City",
+      "match": [
+        "fortree-city"
+      ],
+      "x": 5440.0,
+      "y": 160.0,
+      "map": "FortreeCity"
+    },
+    {
+      "id": "lavaridge-town",
+      "label": "Lavaridge Town",
+      "match": [
+        "lavaridge-town"
+      ],
+      "x": 2400.0,
+      "y": 1120.0,
+      "map": "LavaridgeTown"
+    },
+    {
+      "id": "lilycove-city",
+      "label": "Lilycove City",
+      "match": [
+        "lilycove-city"
+      ],
+      "x": 8320.0,
+      "y": 1440.0,
+      "map": "LilycoveCity"
+    },
+    {
+      "id": "littleroot-town",
+      "label": "Littleroot Town",
+      "match": [
+        "littleroot-town"
+      ],
+      "x": 2080.0,
+      "y": 4672.0,
+      "map": "LittlerootTown"
+    },
+    {
+      "id": "mauville-city",
+      "label": "Mauville City",
+      "match": [
+        "mauville-city"
+      ],
+      "x": 3520.0,
+      "y": 2400.0,
+      "map": "MauvilleCity"
+    },
+    {
+      "id": "mossdeep-city",
+      "label": "Mossdeep City",
+      "match": [
+        "mossdeep-city"
+      ],
+      "x": 10880.0,
+      "y": 1920.0,
+      "map": "MossdeepCity"
+    },
+    {
+      "id": "oldale-town",
+      "label": "Oldale Town",
+      "match": [
+        "oldale-town"
+      ],
+      "x": 2080.0,
+      "y": 4032.0,
+      "map": "OldaleTown"
+    },
+    {
+      "id": "pacifidlog-town",
+      "label": "Pacifidlog Town",
+      "match": [
+        "pacifidlog-town"
+      ],
+      "x": 7840.0,
+      "y": 4480.0,
+      "map": "PacifidlogTown"
+    },
+    {
+      "id": "petalburg-city",
+      "label": "Petalburg City",
+      "match": [
+        "petalburg-city"
+      ],
+      "x": 880.0,
+      "y": 3952.0,
+      "map": "PetalburgCity"
+    },
+    {
+      "id": "route-101",
+      "label": "Route 101",
+      "match": [
+        "route-101",
+        "hoenn-route-101"
+      ],
+      "x": 2080.0,
+      "y": 4352.0,
+      "map": "Route101"
+    },
+    {
+      "id": "route-102",
+      "label": "Route 102",
+      "match": [
+        "route-102",
+        "hoenn-route-102"
+      ],
+      "x": 1520.0,
+      "y": 4032.0,
+      "map": "Route102"
+    },
+    {
+      "id": "route-103",
+      "label": "Route 103",
+      "match": [
+        "route-103",
+        "hoenn-route-103"
+      ],
+      "x": 2560.0,
+      "y": 3696.0,
+      "map": "Route103"
+    },
+    {
+      "id": "route-104",
+      "label": "Route 104",
+      "match": [
+        "route-104",
+        "hoenn-route-104"
+      ],
+      "x": 320.0,
+      "y": 3552.0,
+      "map": "Route104"
+    },
+    {
+      "id": "route-105",
+      "label": "Route 105",
+      "match": [
+        "route-105",
+        "hoenn-route-105"
+      ],
+      "x": 320.0,
+      "y": 4832.0,
+      "map": "Route105"
+    },
+    {
+      "id": "route-106",
+      "label": "Route 106",
+      "match": [
+        "route-106",
+        "hoenn-route-106"
+      ],
+      "x": 640.0,
+      "y": 5632.0,
+      "map": "Route106"
+    },
+    {
+      "id": "route-107",
+      "label": "Route 107",
+      "match": [
+        "route-107",
+        "hoenn-route-107"
+      ],
+      "x": 1760.0,
+      "y": 5920.0,
+      "map": "Route107"
+    },
+    {
+      "id": "route-108",
+      "label": "Route 108",
+      "match": [
+        "route-108",
+        "hoenn-route-108"
+      ],
+      "x": 2720.0,
+      "y": 5920.0,
+      "map": "Route108"
+    },
+    {
+      "id": "route-109",
+      "label": "Route 109",
+      "match": [
+        "route-109",
+        "hoenn-route-109"
+      ],
+      "x": 3520.0,
+      "y": 5624.0,
+      "map": "Route109"
+    },
+    {
+      "id": "route-110",
+      "label": "Route 110",
+      "match": [
+        "route-110",
+        "hoenn-route-110"
+      ],
+      "x": 3520.0,
+      "y": 3360.0,
+      "map": "Route110"
+    },
+    {
+      "id": "route-111",
+      "label": "Route 111",
+      "match": [
+        "route-111",
+        "hoenn-route-111"
+      ],
+      "x": 3520.0,
+      "y": 1120.0,
+      "map": "Route111"
+    },
+    {
+      "id": "route-112",
+      "label": "Route 112",
+      "match": [
+        "route-112",
+        "hoenn-route-112"
+      ],
+      "x": 2880.0,
+      "y": 800.0,
+      "map": "Route112"
+    },
+    {
+      "id": "route-113",
+      "label": "Route 113",
+      "match": [
+        "route-113",
+        "hoenn-route-113"
+      ],
+      "x": 2400.0,
+      "y": 160.0,
+      "map": "Route113"
+    },
+    {
+      "id": "route-114",
+      "label": "Route 114",
+      "match": [
+        "route-114",
+        "hoenn-route-114"
+      ],
+      "x": 960.0,
+      "y": 672.0,
+      "map": "Route114"
+    },
+    {
+      "id": "route-115",
+      "label": "Route 115",
+      "match": [
+        "route-115",
+        "hoenn-route-115"
+      ],
+      "x": 320.0,
+      "y": 1312.0,
+      "map": "Route115"
+    },
+    {
+      "id": "route-116",
+      "label": "Route 116",
+      "match": [
+        "route-116",
+        "hoenn-route-116"
+      ],
+      "x": 1440.0,
+      "y": 2112.0,
+      "map": "Route116"
+    },
+    {
+      "id": "route-117",
+      "label": "Route 117",
+      "match": [
+        "route-117",
+        "hoenn-route-117"
+      ],
+      "x": 2720.0,
+      "y": 2400.0,
+      "map": "Route117"
+    },
+    {
+      "id": "route-118",
+      "label": "Route 118",
+      "match": [
+        "route-118",
+        "hoenn-route-118"
+      ],
+      "x": 4480.0,
+      "y": 2400.0,
+      "map": "Route118"
+    },
+    {
+      "id": "route-119",
+      "label": "Route 119",
+      "match": [
+        "route-119",
+        "hoenn-route-119"
+      ],
+      "x": 4800.0,
+      "y": 1120.0,
+      "map": "Route119"
+    },
+    {
+      "id": "route-120",
+      "label": "Route 120",
+      "match": [
+        "route-120",
+        "hoenn-route-120"
+      ],
+      "x": 6080.0,
+      "y": 800.0,
+      "map": "Route120"
+    },
+    {
+      "id": "route-121",
+      "label": "Route 121",
+      "match": [
+        "route-121",
+        "hoenn-route-121"
+      ],
+      "x": 7040.0,
+      "y": 1440.0,
+      "map": "Route121"
+    },
+    {
+      "id": "route-122",
+      "label": "Route 122",
+      "match": [
+        "route-122",
+        "hoenn-route-122"
+      ],
+      "x": 7040.0,
+      "y": 1920.0,
+      "map": "Route122"
+    },
+    {
+      "id": "route-123",
+      "label": "Route 123",
+      "match": [
+        "route-123",
+        "hoenn-route-123"
+      ],
+      "x": 6240.0,
+      "y": 2400.0,
+      "map": "Route123"
+    },
+    {
+      "id": "route-124",
+      "label": "Route 124",
+      "match": [
+        "route-124",
+        "hoenn-route-124"
+      ],
+      "x": 9600.0,
+      "y": 1600.0,
+      "map": "Route124"
+    },
+    {
+      "id": "route-125",
+      "label": "Route 125",
+      "match": [
+        "route-125",
+        "hoenn-route-125"
+      ],
+      "x": 10880.0,
+      "y": 1280.0,
+      "map": "Route125"
+    },
+    {
+      "id": "route-126",
+      "label": "Route 126",
+      "match": [
+        "route-126",
+        "hoenn-route-126"
+      ],
+      "x": 9600.0,
+      "y": 2880.0,
+      "map": "Route126"
+    },
+    {
+      "id": "route-127",
+      "label": "Route 127",
+      "match": [
+        "route-127",
+        "hoenn-route-127"
+      ],
+      "x": 10880.0,
+      "y": 2880.0,
+      "map": "Route127"
+    },
+    {
+      "id": "route-128",
+      "label": "Route 128",
+      "match": [
+        "route-128",
+        "hoenn-route-128"
+      ],
+      "x": 11200.0,
+      "y": 3840.0,
+      "map": "Route128"
+    },
+    {
+      "id": "route-129",
+      "label": "Route 129",
+      "match": [
+        "route-129",
+        "hoenn-route-129"
+      ],
+      "x": 10880.0,
+      "y": 4480.0,
+      "map": "Route129"
+    },
+    {
+      "id": "route-130",
+      "label": "Route 130",
+      "match": [
+        "route-130",
+        "hoenn-route-130"
+      ],
+      "x": 9600.0,
+      "y": 4480.0,
+      "map": "Route130"
+    },
+    {
+      "id": "route-131",
+      "label": "Route 131",
+      "match": [
+        "route-131",
+        "hoenn-route-131"
+      ],
+      "x": 8480.0,
+      "y": 4480.0,
+      "map": "Route131"
+    },
+    {
+      "id": "route-132",
+      "label": "Route 132",
+      "match": [
+        "route-132",
+        "hoenn-route-132"
+      ],
+      "x": 7040.0,
+      "y": 4480.0,
+      "map": "Route132"
+    },
+    {
+      "id": "route-133",
+      "label": "Route 133",
+      "match": [
+        "route-133",
+        "hoenn-route-133"
+      ],
+      "x": 5760.0,
+      "y": 4480.0,
+      "map": "Route133"
+    },
+    {
+      "id": "route-134",
+      "label": "Route 134",
+      "match": [
+        "route-134",
+        "hoenn-route-134"
+      ],
+      "x": 4480.0,
+      "y": 4480.0,
+      "map": "Route134"
+    },
+    {
+      "id": "rustboro-city",
+      "label": "Rustboro City",
+      "match": [
+        "rustboro-city"
+      ],
+      "x": 320.0,
+      "y": 2432.0,
+      "map": "RustboroCity"
+    },
+    {
+      "id": "slateport-city",
+      "label": "Slateport City",
+      "match": [
+        "slateport-city"
+      ],
+      "x": 3520.0,
+      "y": 4640.0,
+      "map": "SlateportCity"
+    },
+    {
+      "id": "verdanturf-town",
+      "label": "Verdanturf Town",
+      "match": [
+        "verdanturf-town"
+      ],
+      "x": 2080.0,
+      "y": 2400.0,
+      "map": "VerdanturfTown"
+    }
+  ],
+  "alsoFor": [
+    "oras"
+  ]
+}

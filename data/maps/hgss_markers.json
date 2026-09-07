@@ -1,0 +1,346 @@
+{
+  "game": "hgss",
+  "region": "johto",
+  "image": "assets/maps/gsc/world_full.png",
+  "imageWidth": 7520,
+  "imageHeight": 4320,
+  "maxZoom": 2,
+  "minZoom": -3,
+  "tiles": "assets/maps/gsc/tiles/{z}/{x}/{y}.png",
+  "markers": [
+    {
+      "id": "azalea-town",
+      "label": "Azalea Town",
+      "match": [
+        "azalea-town"
+      ],
+      "x": 2880.0,
+      "y": 4176.0,
+      "map": "AzaleaTown"
+    },
+    {
+      "id": "blackthorn-city",
+      "label": "Blackthorn City",
+      "match": [
+        "blackthorn-city"
+      ],
+      "x": 5600.0,
+      "y": 1440.0,
+      "map": "BlackthornCity"
+    },
+    {
+      "id": "cherrygrove-city",
+      "label": "Cherrygrove City",
+      "match": [
+        "cherrygrove-city"
+      ],
+      "x": 4320.0,
+      "y": 3600.0,
+      "map": "CherrygroveCity"
+    },
+    {
+      "id": "cianwood-city",
+      "label": "Cianwood City",
+      "match": [
+        "cianwood-city"
+      ],
+      "x": 240.0,
+      "y": 3184.0,
+      "map": "CianwoodCity"
+    },
+    {
+      "id": "ecruteak-city",
+      "label": "Ecruteak City",
+      "match": [
+        "ecruteak-city"
+      ],
+      "x": 2720.0,
+      "y": 1440.0,
+      "map": "EcruteakCity"
+    },
+    {
+      "id": "goldenrod-city",
+      "label": "Goldenrod City",
+      "match": [
+        "goldenrod-city"
+      ],
+      "x": 2400.0,
+      "y": 3168.0,
+      "map": "GoldenrodCity"
+    },
+    {
+      "id": "lake-of-rage",
+      "label": "Lake Of Rage",
+      "match": [
+        "lake-of-rage"
+      ],
+      "x": 4160.0,
+      "y": 288.0,
+      "map": "LakeOfRage"
+    },
+    {
+      "id": "mahogany-town",
+      "label": "Mahogany Town",
+      "match": [
+        "mahogany-town"
+      ],
+      "x": 4160.0,
+      "y": 1584.0,
+      "map": "MahoganyTown"
+    },
+    {
+      "id": "new-bark-town",
+      "label": "New Bark Town",
+      "match": [
+        "new-bark-town"
+      ],
+      "x": 5760.0,
+      "y": 3600.0,
+      "map": "NewBarkTown"
+    },
+    {
+      "id": "olivine-city",
+      "label": "Olivine City",
+      "match": [
+        "olivine-city"
+      ],
+      "x": 1600.0,
+      "y": 2176.0,
+      "map": "OlivineCity"
+    },
+    {
+      "id": "route-26",
+      "label": "Route 26",
+      "match": [
+        "route-26",
+        "johto-route-26"
+      ],
+      "x": 7360.0,
+      "y": 2880.0,
+      "map": "Route26"
+    },
+    {
+      "id": "route-27",
+      "label": "Route 27",
+      "match": [
+        "route-27",
+        "johto-route-27"
+      ],
+      "x": 6560.0,
+      "y": 3600.0,
+      "map": "Route27"
+    },
+    {
+      "id": "route-29",
+      "label": "Route 29",
+      "match": [
+        "route-29",
+        "johto-route-29"
+      ],
+      "x": 5120.0,
+      "y": 3600.0,
+      "map": "Route29"
+    },
+    {
+      "id": "route-30",
+      "label": "Route 30",
+      "match": [
+        "route-30",
+        "johto-route-30"
+      ],
+      "x": 4320.0,
+      "y": 3024.0,
+      "map": "Route30"
+    },
+    {
+      "id": "route-31",
+      "label": "Route 31",
+      "match": [
+        "route-31",
+        "johto-route-31"
+      ],
+      "x": 4160.0,
+      "y": 2448.0,
+      "map": "Route31"
+    },
+    {
+      "id": "route-32",
+      "label": "Route 32",
+      "match": [
+        "route-32",
+        "johto-route-32"
+      ],
+      "x": 3360.0,
+      "y": 3312.0,
+      "map": "Route32"
+    },
+    {
+      "id": "route-33",
+      "label": "Route 33",
+      "match": [
+        "route-33",
+        "johto-route-33"
+      ],
+      "x": 3360.0,
+      "y": 4176.0,
+      "map": "Route33"
+    },
+    {
+      "id": "route-34",
+      "label": "Route 34",
+      "match": [
+        "route-34",
+        "johto-route-34"
+      ],
+      "x": 2400.0,
+      "y": 3888.0,
+      "map": "Route34"
+    },
+    {
+      "id": "route-35",
+      "label": "Route 35",
+      "match": [
+        "route-35",
+        "johto-route-35"
+      ],
+      "x": 2400.0,
+      "y": 2592.0,
+      "map": "Route35"
+    },
+    {
+      "id": "route-36",
+      "label": "Route 36",
+      "match": [
+        "route-36",
+        "johto-route-36"
+      ],
+      "x": 2720.0,
+      "y": 2160.0,
+      "map": "Route36"
+    },
+    {
+      "id": "route-37",
+      "label": "Route 37",
+      "match": [
+        "route-37",
+        "johto-route-37"
+      ],
+      "x": 2720.0,
+      "y": 1872.0,
+      "map": "Route37"
+    },
+    {
+      "id": "route-38",
+      "label": "Route 38",
+      "match": [
+        "route-38",
+        "johto-route-38"
+      ],
+      "x": 2080.0,
+      "y": 1456.0,
+      "map": "Route38"
+    },
+    {
+      "id": "route-39",
+      "label": "Route 39",
+      "match": [
+        "route-39",
+        "johto-route-39"
+      ],
+      "x": 1600.0,
+      "y": 1600.0,
+      "map": "Route39"
+    },
+    {
+      "id": "route-40",
+      "label": "Route 40",
+      "match": [
+        "route-40",
+        "johto-route-40"
+      ],
+      "x": 1120.0,
+      "y": 2464.0,
+      "map": "Route40"
+    },
+    {
+      "id": "route-41",
+      "label": "Route 41",
+      "match": [
+        "route-41",
+        "johto-route-41"
+      ],
+      "x": 880.0,
+      "y": 3184.0,
+      "map": "Route41"
+    },
+    {
+      "id": "route-42",
+      "label": "Route 42",
+      "match": [
+        "route-42",
+        "johto-route-42"
+      ],
+      "x": 3520.0,
+      "y": 1584.0,
+      "map": "Route42"
+    },
+    {
+      "id": "route-43",
+      "label": "Route 43",
+      "match": [
+        "route-43",
+        "johto-route-43"
+      ],
+      "x": 4160.0,
+      "y": 1008.0,
+      "map": "Route43"
+    },
+    {
+      "id": "route-44",
+      "label": "Route 44",
+      "match": [
+        "route-44",
+        "johto-route-44"
+      ],
+      "x": 4800.0,
+      "y": 1584.0,
+      "map": "Route44"
+    },
+    {
+      "id": "route-45",
+      "label": "Route 45",
+      "match": [
+        "route-45",
+        "johto-route-45"
+      ],
+      "x": 5440.0,
+      "y": 2448.0,
+      "map": "Route45"
+    },
+    {
+      "id": "route-46",
+      "label": "Route 46",
+      "match": [
+        "route-46",
+        "johto-route-46"
+      ],
+      "x": 5120.0,
+      "y": 3168.0,
+      "map": "Route46"
+    },
+    {
+      "id": "violet-city",
+      "label": "Violet City",
+      "match": [
+        "violet-city"
+      ],
+      "x": 3520.0,
+      "y": 2304.0,
+      "map": "VioletCity"
+    }
+  ],
+  "alsoFor": [
+    "hgss"
+  ],
+  "aliasOf": "gsc"
+}

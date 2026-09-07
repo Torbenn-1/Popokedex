@@ -36,15 +36,17 @@ let pinAtivo = null;
 let leafletMap = null;
 /** @type {Map<string, import("leaflet").Marker>} */
 let leafletMarkers = new Map();
+/** @type {Record<string, any>} */
+const packCache = {};
 /** @type {any} */
-let rbyPack = null;
+let leafletPack = null;
 
 function asset_prefix() {
   return "../assets/maps/";
 }
 
-function rby_data_url() {
-  return "../data/maps/rby_markers.json";
+function markers_url(slug) {
+  return `../data/maps/${slug}_markers.json`;
 }
 
 function atualiza_link_pokemaps() {
@@ -85,28 +87,39 @@ function destroi_leaflet() {
     leafletMap = null;
   }
   leafletMarkers.clear();
+  leafletPack = null;
   mapStage.classList.remove("map-stage-inner_leaflet");
 }
 
-function usa_leaflet_rby() {
-  return Boolean(jogoAtual && jogoAtual.slug === "rby" && rbyPack?.markers?.length);
+function usa_leaflet() {
+  return Boolean(jogoAtual && leafletPack?.markers?.length && leafletPack?.tiles);
 }
 
-async function tenta_carregar_rby() {
-  if (rbyPack) return rbyPack;
+async function carrega_pack(slug) {
+  if (packCache[slug]) return packCache[slug];
   try {
-    const res = await fetch(rby_data_url());
-    if (!res.ok) return null;
-    rbyPack = await res.json();
-    return rbyPack;
+    const res = await fetch(markers_url(slug));
+    if (!res.ok) {
+      packCache[slug] = null;
+      return null;
+    }
+    packCache[slug] = await res.json();
+    return packCache[slug];
   } catch {
+    packCache[slug] = null;
     return null;
   }
 }
 
+function image_url_from_pack(pack) {
+  const rel = String(pack.image || "").replace(/^assets\/maps\//, "");
+  if (!rel) return null;
+  return `${asset_prefix()}${rel}`;
+}
+
 function atualiza_leaflet_pin_ready() {
-  if (!leafletMap || !rbyPack) return;
-  for (const pin of rbyPack.markers) {
+  if (!leafletMap || !leafletPack) return;
+  for (const pin of leafletPack.markers) {
     const marker = leafletMarkers.get(pin.id);
     if (!marker) continue;
     const el = marker.getElement();
@@ -120,55 +133,61 @@ function atualiza_leaflet_pin_ready() {
 }
 
 function monta_mapa_leaflet() {
+  const pack = leafletPack;
   destroi_leaflet();
-  const pack = rbyPack;
+  leafletPack = pack;
   if (!pack || typeof L === "undefined") {
     monta_mapa_overview();
     return;
   }
 
-  mapStage.classList.add("map-stage-inner_leaflet");
-  mapStage.innerHTML = `<div id="map-leaflet" class="map-leaflet" role="application" aria-label="Kanto map"></div>`;
+  const imgUrl = image_url_from_pack(pack);
+  const w = pack.imageWidth;
+  const h = pack.imageHeight;
+  if (!imgUrl || !w || !h) {
+    monta_mapa_overview();
+    return;
+  }
 
-  const maxZoom = pack.maxZoom ?? 5;
-  const world = pack.worldSize ?? 8192;
-  const tileSize = pack.tileSize ?? 256;
-  const tileUrl = `${asset_prefix()}rby/tiles/{z}/{x}/{y}.png`;
+  mapStage.classList.add("map-stage-inner_leaflet");
+  mapStage.innerHTML = `<div id="map-leaflet" class="map-leaflet" role="application" aria-label="Game map"></div>`;
+
+  // CRS.Simple + imageOverlay: lat grows downward (y from top of PNG), lng = x
+  const minZ = pack.minZoom ?? -3;
+  const maxZ = pack.maxZoom ?? 2;
 
   leafletMap = L.map("map-leaflet", {
     crs: L.CRS.Simple,
-    minZoom: 0,
-    maxZoom,
-    zoomSnap: 1,
-    zoomDelta: 1,
+    minZoom: minZ,
+    maxZoom: maxZ,
+    zoomSnap: 0.25,
+    zoomDelta: 0.5,
     attributionControl: true,
   });
 
-  const southWest = leafletMap.unproject([0, world], maxZoom);
-  const northEast = leafletMap.unproject([world, 0], maxZoom);
+  const southWest = L.latLng(h, 0);
+  const northEast = L.latLng(0, w);
   const bounds = L.latLngBounds(southWest, northEast);
 
-  L.tileLayer(tileUrl, {
-    tileSize,
-    minZoom: 0,
-    maxZoom,
-    noWrap: true,
-    bounds,
-    attribution: "Map from pret/pokered · Pokémon © Nintendo",
+  L.imageOverlay(imgUrl, bounds, {
+    opacity: 1,
+    interactive: false,
+    attribution: "pret decomp · Pokémon © Nintendo",
   }).addTo(leafletMap);
 
-  leafletMap.setMaxBounds(bounds.pad(0.05));
+  leafletMap.setMaxBounds(bounds.pad(0.08));
   leafletMap.fitBounds(bounds);
 
-  const icon = (extra = "") =>
+  const icon = () =>
     L.divIcon({
-      className: `rby-pin ${extra}`.trim(),
+      className: "rby-pin",
       iconSize: [14, 14],
       iconAnchor: [7, 7],
     });
 
   for (const pin of pack.markers) {
-    const latlng = leafletMap.unproject([pin.x, pin.y], maxZoom);
+    // image pixels from top-left → LatLng(y, x)
+    const latlng = L.latLng(pin.y, pin.x);
     const marker = L.marker(latlng, {
       icon: icon(),
       title: pin.label,
@@ -223,9 +242,10 @@ function monta_mapa_overview() {
 }
 
 async function monta_mapa_visual() {
-  if (jogoAtual?.slug === "rby") {
-    await tenta_carregar_rby();
-    if (usa_leaflet_rby()) {
+  if (jogoAtual?.slug) {
+    const pack = await carrega_pack(jogoAtual.slug);
+    if (pack?.markers?.length && pack?.tiles) {
+      leafletPack = pack;
       monta_mapa_leaflet();
       return;
     }

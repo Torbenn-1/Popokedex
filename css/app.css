@@ -1155,6 +1155,11 @@ body.has-site-foot > .wrap {
   image-rendering: crisp-edges;
 }
 
+.map-leaflet .leaflet-image-layer {
+  image-rendering: pixelated;
+  image-rendering: crisp-edges;
+}
+
 .map-leaflet .leaflet-container {
   font: inherit;
   background: #285aa0;
