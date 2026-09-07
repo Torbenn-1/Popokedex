@@ -243,7 +243,7 @@ function pinta_grade() {
   }
   grade.innerHTML = lista
     .slice(0, 300)
-    .map((p) => cell_html(p.id, p.name))
+    .map((p) => cell_html(p.id, p.name, { types: p.types || [] }))
     .join("");
   const cap = dex_cap_do_jogo(jogoSel.value);
   status.textContent = `${t("pool_for_game")}: ${Math.min(lista.length, 300)}/#${cap}`;
