@@ -8,9 +8,9 @@ function data_url() {
   // funciona de / e de /dex/
   const parts = location.pathname.split("/").filter(Boolean);
   const leaf = parts[parts.length - 1] || "";
-  const inSub = ["dex", "maps", "plan", "roms"].includes(leaf) ||
+  const inSub = ["dex", "maps", "plan", "roms", "donate"].includes(leaf) ||
     (leaf.endsWith(".html") && parts.length >= 2 &&
-      ["dex", "maps", "plan", "roms"].includes(parts[parts.length - 2]));
+      ["dex", "maps", "plan", "roms", "donate"].includes(parts[parts.length - 2]));
   return `${inSub ? "../" : ""}data/dex_slim.json`;
 }
 

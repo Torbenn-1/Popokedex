@@ -3,7 +3,7 @@ import { theme_mode, toggle_theme } from "./theme.js";
 
 function path_prefix() {
   const parts = location.pathname.split("/").filter(Boolean);
-  const subs = new Set(["dex", "maps", "plan", "roms"]);
+  const subs = new Set(["dex", "maps", "plan", "roms", "donate"]);
   const leaf = parts[parts.length - 1] || "";
   if (subs.has(leaf)) return "../";
   if (leaf.endsWith(".html") && parts.length >= 2 && subs.has(parts[parts.length - 2]))
@@ -26,10 +26,14 @@ export function monta_shell({ active } = {}) {
   const dark = theme_mode() === "dark";
   const header = document.querySelector("[data-shell-header]");
   if (header) {
+    header.classList.add("site-header");
     header.innerHTML = `
       <div class="topbar">
-        <a class="brand" href="${pre}index.html">${t("brand")}</a>
-        <nav class="nav">
+        <a class="brand" href="${pre}index.html">
+          <span class="brand__mark" aria-hidden="true"></span>
+          <span class="brand__txt">${t("brand")}</span>
+        </a>
+        <nav class="nav" aria-label="Main">
           ${links
             .map(
               (l) =>
@@ -49,8 +53,51 @@ export function monta_shell({ active } = {}) {
 
   const footer = document.querySelector("[data-shell-footer]");
   if (footer) {
-    footer.innerHTML = `<p class="footer__line">${t("footer_credit")}</p>`;
+    if (footer.parentElement !== document.body) {
+      document.body.appendChild(footer);
+    }
+    footer.classList.add("site-foot");
+    footer.innerHTML = `
+      <div class="site-foot__inner">
+        <div class="site-foot__grid">
+          <div class="site-foot__brand">
+            <a class="site-foot__logo" href="${pre}index.html">${t("brand")}</a>
+            <p class="site-foot__tag">${t("tagline")}</p>
+            <p class="site-foot__lead">${t("home_lead")}</p>
+          </div>
+          <div class="site-foot__col">
+            <h3 class="site-foot__h">${t("foot_explore")}</h3>
+            <ul class="site-foot__list">
+              <li><a href="${pre}index.html">${t("nav_home")}</a></li>
+              <li><a href="${pre}dex/">${t("nav_dex")}</a></li>
+              <li><a href="${pre}maps/">${t("nav_maps")}</a></li>
+              <li><a href="${pre}plan/">${t("nav_team")}</a></li>
+              <li><a href="${pre}roms/">${t("nav_roms")}</a></li>
+            </ul>
+          </div>
+          <div class="site-foot__col">
+            <h3 class="site-foot__h">${t("foot_support")}</h3>
+            <ul class="site-foot__list">
+              <li><a href="${pre}donate/">${t("donate_cta")}</a></li>
+            </ul>
+            <p class="site-foot__note">${t("donate_blurb")}</p>
+          </div>
+          <div class="site-foot__col">
+            <h3 class="site-foot__h">${t("foot_about")}</h3>
+            <ul class="site-foot__list">
+              <li><a href="https://pokeapi.co/" target="_blank" rel="noopener noreferrer">PokéAPI</a></li>
+              <li><a href="https://github.com/richi3f/pokemon-team-planner" target="_blank" rel="noopener noreferrer">${t("foot_inspired")}</a></li>
+            </ul>
+          </div>
+        </div>
+        <div class="site-foot__bottom">
+          <p>${t("footer_credit")}</p>
+        </div>
+      </div>
+    `;
   }
+
+  document.body.classList.add("has-site-foot");
 
   document.querySelectorAll("[data-i18n]").forEach((el) => {
     const key = el.getAttribute("data-i18n");

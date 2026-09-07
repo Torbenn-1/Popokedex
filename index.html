@@ -17,32 +17,30 @@
   <link rel="stylesheet" href="css/app.css">
   <script type="module" src="js/pages/home.js"></script>
 </head>
-<body>
-  <div class="wrap">
+<body class="page-home">
+  <div class="wrap wrap_home">
     <header data-shell-header></header>
-    <section class="hero">
-      <h1 data-i18n="brand">Popokedex</h1>
-      <p data-i18n="home_lead"></p>
-    </section>
-    <section class="grid-cards">
-      <article class="card"><a class="stretch" href="dex/">
-        <h2 data-i18n="card_dex_title"></h2>
-        <p data-i18n="card_dex_body"></p>
-      </a></article>
-      <article class="card"><a class="stretch" href="maps/">
-        <h2 data-i18n="card_maps_title"></h2>
-        <p data-i18n="card_maps_body"></p>
-      </a></article>
-      <article class="card"><a class="stretch" href="plan/">
-        <h2 data-i18n="card_team_title"></h2>
-        <p data-i18n="card_team_body"></p>
-      </a></article>
-      <article class="card"><a class="stretch" href="roms/">
-        <h2 data-i18n="card_roms_title"></h2>
-        <p data-i18n="card_roms_body"></p>
-      </a></article>
-    </section>
-    <footer data-shell-footer></footer>
+    <main class="home-main">
+      <section class="grid-cards home-cards">
+        <article class="card"><a class="stretch" href="dex/">
+          <h2 data-i18n="card_dex_title"></h2>
+          <p data-i18n="card_dex_body"></p>
+        </a></article>
+        <article class="card"><a class="stretch" href="maps/">
+          <h2 data-i18n="card_maps_title"></h2>
+          <p data-i18n="card_maps_body"></p>
+        </a></article>
+        <article class="card"><a class="stretch" href="plan/">
+          <h2 data-i18n="card_team_title"></h2>
+          <p data-i18n="card_team_body"></p>
+        </a></article>
+        <article class="card"><a class="stretch" href="roms/">
+          <h2 data-i18n="card_roms_title"></h2>
+          <p data-i18n="card_roms_body"></p>
+        </a></article>
+      </section>
+    </main>
   </div>
+  <footer data-shell-footer></footer>
 </body>
 </html>

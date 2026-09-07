@@ -1,42 +1,27 @@
 # Popokedex
 
-Pokédex, mapas por jogo, montador de times. Editor de ROMs fica pra depois.
+A sua Pokédex. Limpa, rápida e do seu jeito.
 
-## Rodar local
+Monte times, explore regiões e consulte fichas completas — em português ou inglês, no claro ou no escuro.
 
-```bash
-cd ~/Documents/caraio-dex
-python -m http.server 8765
-```
+## O que você encontra
 
-Abre `http://localhost:8765/`.
+**Pokédex** — Mais de mil Pokémon, busca instantânea, filtros por tipo e região, artes 3D/2D e ficha com stats, habilidades, golpes e onde encontrar.
 
-Precisa de HTTP (ES modules + fetch). Grade/lista/times usam `data/dex_slim.json` (offline). Ficha detalhada e encontros ainda consultam a [PokéAPI](https://pokeapi.co/) (com cache + mirror).
+**Times** — Seis slots, análise de cobertura de tipos e link pra compartilhar o time na hora.
 
-Regenerar o dump slim (opcional):
+**Mapas** — Visão por região com pins e encontros. Pra ir além do overview, tem atalho pro mapa detalhado.
 
-```bash
-python3 scripts/build_slim_dex.py
-```
+**ROMs** — Em breve. Ferramentas locais pra quem já tem a própria ROM.
 
-## GitHub Pages
+## Por que Popokedex
 
-Site estático — hospeda no próprio GitHub:
+- Funciona offline na grade — sem travar na API a cada scroll  
+- Tema claro e escuro no padrão que você já conhece  
+- Interface pensada pra run, study e theorycrafting  
+- Site estático: leve, direto, sem conta obrigatória  
 
-1. Cria um repo **novo** (não precisa ser fork).
-2. Sobe os arquivos na branch `main` (ou `master`).
-3. Settings → Pages → Source: **Deploy from a branch** → `main` / `/ (root)`.
-4. URL fica tipo `https://SEU_USER.github.io/popokedex/`.
+---
 
-O arquivo `.nojekyll` já está no repo pra o Pages não processar com Jekyll.
-
-## O que tem
-
-- **Pokédex** — ficha com stats, habilidades, golpes (filtro por método/versão), locais, grito e pegada; tema claro/escuro
-- **Mapas** — overview CC0 por região + pins clicáveis; encontros da PokéAPI; link pro mapa detalhado do [PokéMaps](https://pokemaps.net/maps) (referência de UX)
-- **Times** — 6 slots, pool limitado ao dex do jogo, análise de tipos, link na URL, arrastar pra reordenar
-- **ROMs** — placeholder
-
-Pegadas de veekun quando existirem. Pokémon é © Nintendo.
-
-Inspirado no team planner do [richi3f](https://github.com/richi3f/pokemon-team-planner).
+Pokémon é © Nintendo. Dados via [PokéAPI](https://pokeapi.co/).  
+Inspirado no [team planner do richi3f](https://github.com/richi3f/pokemon-team-planner).

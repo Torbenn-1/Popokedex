@@ -1,7 +1,7 @@
 import { monta_shell } from "../boot.js";
 import { t } from "../i18n.js";
-import { TIPOS, REGIOES } from "../../data/jogos.js";
-import { abre_ficha, cell_html, row_html } from "../cuzin_dex.js";
+import { TIPOS, JOGOS, dex_cap_do_jogo } from "../../data/jogos.js";
+import { abre_ficha, cell_html, row_html, list_header_html } from "../cuzin_dex.js";
 import { capitalize } from "../boot.js";
 import { sprite_mode, set_sprite_mode } from "../sprite_mode.js";
 import { carrega_slim, slim_como_catalogo } from "../slim_dex.js";
@@ -12,7 +12,7 @@ const grade = document.getElementById("grade");
 const status = document.getElementById("status");
 const busca = document.getElementById("busca");
 const filtroTipo = document.getElementById("filtro-tipo");
-const filtroGen = document.getElementById("filtro-gen");
+const filtroJogo = document.getElementById("filtro-gen");
 
 const LAYOUT_KEY = "caraio_dex_layout";
 const CHUNK_GRID = 60;
@@ -50,11 +50,9 @@ filtroTipo.innerHTML =
   `<option value="">${t("filter_all")}</option>` +
   TIPOS.map((tp) => `<option value="${tp}">${capitalize(tp)}</option>`).join("");
 
-filtroGen.innerHTML =
+filtroJogo.innerHTML =
   `<option value="">${t("filter_all")}</option>` +
-  REGIOES.map(
-    (r) => `<option value="${r.gen}">${r.label.toUpperCase()}</option>`
-  ).join("");
+  JOGOS.map((j) => `<option value="${j.slug}">${j.name}</option>`).join("");
 
 async function monta_catalogo() {
   status.textContent = t("loading");
@@ -77,13 +75,10 @@ function atualiza_filtro_tipo() {
   pinta(true);
 }
 
-function atualiza_filtro_gen() {
-  pinta(true);
-}
-
 function filtra() {
   const q = (busca.value || "").trim().toLowerCase();
-  const gen = filtroGen.value ? Number(filtroGen.value) : 0;
+  const jogo = filtroJogo.value;
+  const cap = jogo ? dex_cap_do_jogo(jogo) : 0;
   let lista = catalogo;
   if (q) {
     lista = lista.filter(
@@ -93,7 +88,7 @@ function filtra() {
         p.slug.includes(q.replace(/\s+/g, "-"))
     );
   }
-  if (gen) lista = lista.filter((p) => p.gen === gen);
+  if (cap) lista = lista.filter((p) => p.id <= cap);
   if (ids_do_tipo) lista = lista.filter((p) => ids_do_tipo.has(p.id));
   return lista;
 }
@@ -115,8 +110,17 @@ function garante_sentinel() {
   observer.observe(sentinel);
 }
 
+function garante_list_header() {
+  if (layout_mode() !== "list") return;
+  if (grade.querySelector(".dex-list-head")) return;
+  const wrap = document.createElement("div");
+  wrap.innerHTML = list_header_html();
+  grade.prepend(wrap.firstElementChild);
+}
+
 function anexa_chunk(slice) {
   const lm = layout_mode();
+  if (lm === "list") garante_list_header();
   const wrap = document.createElement("div");
   wrap.innerHTML =
     lm === "list"
@@ -183,7 +187,7 @@ document.querySelectorAll("[data-layout]").forEach((btn) => {
 
 busca.addEventListener("input", () => pinta(true));
 filtroTipo.addEventListener("change", atualiza_filtro_tipo);
-filtroGen.addEventListener("change", atualiza_filtro_gen);
+filtroJogo.addEventListener("change", () => pinta(true));
 
 document.addEventListener("keydown", (e) => {
   if (e.key === "/" && document.activeElement !== busca) {

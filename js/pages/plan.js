@@ -93,30 +93,36 @@ function pinta_slots() {
       if (!p) {
         return `<div class="slot" data-i="${i}" draggable="true"><div class="muted">${t("empty_slot")}</div></div>`;
       }
-      return `<div class="slot slot_full" data-i="${i}" draggable="true">
+      return `<div class="slot slot_full" data-i="${i}" data-id="${p.id}" draggable="true" title="${p.name}">
         <img class="slot__art" src="${art3d_url(p.id || p.slug)}" alt=""
           onerror="if(!this.dataset.fb){this.dataset.fb='1';this.src='${artwork_url(p.id || p.slug)}'}else if(this.dataset.fb==='1'){this.dataset.fb='2';this.src='${sprite_url(p.id || p.slug)}'}">
         <div class="slot__name">${p.name}</div>
         <div>${(p.types || []).map((tp) => `<span class="type-pill" style="background:var(--type-${tp})">${tp}</span>`).join("")}</div>
-        <button type="button" class="btn btn_ghost" data-rm="${i}" style="margin-top:0.35rem">×</button>
       </div>`;
     })
     .join("");
 
-  slotsEl.querySelectorAll("[data-rm]").forEach((btn) => {
-    btn.addEventListener("click", (e) => {
-      e.stopPropagation();
-      time[Number(btn.dataset.rm)] = null;
+  slotsEl.querySelectorAll(".slot").forEach((el) => {
+    const i = Number(el.dataset.i);
+
+    el.addEventListener("click", () => {
+      if (!time[i]) return;
+      time[i] = null;
       time = [...time.filter(Boolean), null, null, null, null, null, null].slice(0, 6);
       update_hash();
       pinta_slots();
       pinta_analise();
     });
-  });
 
-  slotsEl.querySelectorAll(".slot").forEach((el) => {
+    el.addEventListener("contextmenu", (e) => {
+      e.preventDefault();
+      const p = time[i];
+      if (!p) return;
+      abre_ficha(p.id || p.slug, { onPick: add_mon });
+    });
+
     el.addEventListener("dragstart", () => {
-      dragFrom = Number(el.dataset.i);
+      dragFrom = i;
     });
     el.addEventListener("dragover", (e) => e.preventDefault());
     el.addEventListener("drop", () => {
@@ -247,7 +253,7 @@ function pinta_grade() {
     .join("");
   const cap = dex_cap_do_jogo(jogoSel.value);
   status.textContent = `${t("pool_for_game")}: ${Math.min(lista.length, 300)}/#${cap}`;
-  grade.querySelectorAll(".dex-cell").forEach((btn) => {
+  grade.querySelectorAll(".poke-card").forEach((btn) => {
     btn.addEventListener("click", async () => {
       const id = btn.dataset.id;
       const hit = catalogo.find((c) => c.id == id);

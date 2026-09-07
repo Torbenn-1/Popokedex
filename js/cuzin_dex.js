@@ -109,22 +109,78 @@ function lista_version_groups(moves_raw) {
   return [...set].sort();
 }
 
+function pretty_slug(s) {
+  return capitalize(String(s || "").replace(/-/g, " "));
+}
+
 function render_move_rows(moves) {
   if (!moves.length) return `<tr><td colspan="7" class="muted">${t("moves_none")}</td></tr>`;
   return moves
     .map(
       (m) =>
         `<tr>
-          <td>${m.name}</td>
-          <td>${m.type}</td>
+          <td class="data-table__name">${m.name}</td>
+          <td>${m.type ? type_pill(m.type) : "—"}</td>
           <td>${m.level || "—"}</td>
           <td>${m.power}</td>
           <td>${m.accuracy}</td>
           <td>${m.pp}</td>
-          <td>${m.damage}</td>
+          <td><span class="cat-pill cat-pill_${m.damage || "status"}">${pretty_slug(m.damage || "—")}</span></td>
         </tr>`
     )
     .join("");
+}
+
+function cry_block(label, src) {
+  if (!src) return "";
+  return `
+    <div class="cry-card">
+      <div class="cry-card__label">${label}</div>
+      <button type="button" class="cry-btn" data-cry="${src}">
+        <span class="cry-btn__ico" aria-hidden="true">▶</span>
+        <span class="cry-btn__txt">${t("play_cry")}</span>
+      </button>
+      <audio preload="none" src="${src}" hidden></audio>
+    </div>`;
+}
+
+function wire_cries(drawer) {
+  drawer.querySelectorAll(".cry-btn").forEach((btn) => {
+    const card = btn.closest(".cry-card");
+    const audio = card?.querySelector("audio");
+    if (!audio) return;
+    btn.addEventListener("click", () => {
+      drawer.querySelectorAll(".cry-card audio").forEach((a) => {
+        if (a !== audio) {
+          a.pause();
+          a.currentTime = 0;
+          const b = a.closest(".cry-card")?.querySelector(".cry-btn");
+          if (b) {
+            b.classList.remove("cry-btn_on");
+            b.querySelector(".cry-btn__ico").textContent = "▶";
+            b.querySelector(".cry-btn__txt").textContent = t("play_cry");
+          }
+        }
+      });
+      if (audio.paused) {
+        audio.play();
+        btn.classList.add("cry-btn_on");
+        btn.querySelector(".cry-btn__ico").textContent = "❚❚";
+        btn.querySelector(".cry-btn__txt").textContent = t("pause_cry");
+      } else {
+        audio.pause();
+        audio.currentTime = 0;
+        btn.classList.remove("cry-btn_on");
+        btn.querySelector(".cry-btn__ico").textContent = "▶";
+        btn.querySelector(".cry-btn__txt").textContent = t("play_cry");
+      }
+    });
+    audio.addEventListener("ended", () => {
+      btn.classList.remove("cry-btn_on");
+      btn.querySelector(".cry-btn__ico").textContent = "▶";
+      btn.querySelector(".cry-btn__txt").textContent = t("play_cry");
+    });
+  });
 }
 
 async function wire_moves(drawer, ficha) {
@@ -138,7 +194,7 @@ async function wire_moves(drawer, ficha) {
   vgSel.innerHTML =
     `<option value="">${t("filter_all")}</option>` +
     vgs
-      .map((v) => `<option value="${v}">${v.replace(/-/g, " ")}</option>`)
+      .map((v) => `<option value="${v}">${pretty_slug(v)}</option>`)
       .join("");
 
   let busy = false;
@@ -204,14 +260,15 @@ export async function abre_ficha(idOuSlug, { onPick } = {}) {
       .slice(0, 25)
       .map((e) => {
         const versions = (e.version_details || [])
-          .map((v) => v.version.name)
+          .map((v) => pretty_slug(v.version.name))
           .join(", ");
         const det = e.version_details?.[0];
+        const method = pretty_slug(det?.encounter_details?.[0]?.method?.name || "—");
         return `<tr>
-          <td>${e.location_area.name.replace(/-/g, " ")}</td>
-          <td>${det?.encounter_details?.[0]?.method?.name || "—"}</td>
+          <td>${pretty_slug(e.location_area.name)}</td>
+          <td>${method}</td>
           <td>${det?.max_chance ?? "—"}%</td>
-          <td>${versions}</td>
+          <td class="enc-games">${versions}</td>
         </tr>`;
       })
       .join("");
@@ -240,13 +297,13 @@ export async function abre_ficha(idOuSlug, { onPick } = {}) {
       <div class="portal-facts">
         <div><span class="muted">${t("height")}</span><strong>${(ficha.height / 10).toFixed(1)} m</strong></div>
         <div><span class="muted">${t("weight")}</span><strong>${(ficha.weight / 10).toFixed(1)} kg</strong></div>
-        <div><span class="muted">${t("habitat")}</span><strong>${ficha.habitat || "—"}</strong></div>
+        <div><span class="muted">${t("habitat")}</span><strong>${pretty_slug(ficha.habitat) || "—"}</strong></div>
       </div>
 
       ${
         weak.length
           ? `<h3 class="section-title">${t("weakness")}</h3>
-             <div>${weak.map(type_pill).join("")}</div>`
+             <div class="portal-types">${weak.map(type_pill).join("")}</div>`
           : ""
       }
 
@@ -273,33 +330,29 @@ export async function abre_ficha(idOuSlug, { onPick } = {}) {
           .join("")}
       </div>
 
-      <div class="foot-cry" style="margin-top:1rem">
-        <div>
+      <div class="foot-cry">
+        <div class="foot-card">
           <div class="muted">${t("footprint")}</div>
           <img class="footprint" src="${footprint_url(ficha.species_id)}" alt=""
             onerror="this.replaceWith(Object.assign(document.createElement('span'),{className:'muted',textContent:'${t("footprint_none")}'}))">
         </div>
-        ${
-          ficha.cries.latest
-            ? `<div><div class="muted">${t("cry_latest")}</div><audio controls src="${ficha.cries.latest}" preload="none"></audio></div>`
-            : ""
-        }
-        ${
-          ficha.cries.legacy
-            ? `<div><div class="muted">${t("cry_legacy")}</div><audio controls src="${ficha.cries.legacy}" preload="none"></audio></div>`
-            : ""
-        }
+        ${cry_block(t("cry_latest"), ficha.cries.latest)}
+        ${cry_block(t("cry_legacy"), ficha.cries.legacy)}
       </div>
 
       <h3 class="section-title">${t("evolution")}</h3>
       <div class="evo-chain">
         ${evoNames
-          .map((n) => `<button type="button" data-evo="${n}">${capitalize(n)}</button>`)
-          .join(" → ")}
+          .map(
+            (n, i) =>
+              `${i ? `<span class="evo-chain__sep" aria-hidden="true">→</span>` : ""}
+               <button type="button" class="evo-btn${n === ficha.slug ? " evo-btn_on" : ""}" data-evo="${n}">${capitalize(n)}</button>`
+          )
+          .join("")}
       </div>
 
       <h3 class="section-title">${t("moves")}</h3>
-      <div class="toolbar">
+      <div class="toolbar drawer-toolbar">
         <label>
           <span class="muted">${t("learn_method")}</span>
           <select data-move-method>
@@ -316,19 +369,21 @@ export async function abre_ficha(idOuSlug, { onPick } = {}) {
         </label>
         <span class="muted" data-moves-status></span>
       </div>
-      <table class="move-table">
-        <thead><tr>
-          <th>${t("moves")}</th><th>${t("filter_type")}</th><th>${t("level")}</th><th>${t("power")}</th><th>${t("accuracy")}</th><th>${t("pp")}</th><th>${t("category")}</th>
-        </tr></thead>
-        <tbody data-moves-body>
-          <tr><td colspan="7" class="muted">${t("loading")}</td></tr>
-        </tbody>
-      </table>
+      <div class="data-scroll">
+        <table class="data-table move-table">
+          <thead><tr>
+            <th>${t("moves")}</th><th>${t("filter_type")}</th><th>${t("level")}</th><th>${t("power")}</th><th>${t("accuracy")}</th><th>${t("pp")}</th><th>${t("category")}</th>
+          </tr></thead>
+          <tbody data-moves-body>
+            <tr><td colspan="7" class="muted">${t("loading")}</td></tr>
+          </tbody>
+        </table>
+      </div>
 
       <h3 class="section-title">${t("locations")}</h3>
       ${
         encRows
-          ? `<table class="enc-table"><thead><tr><th>${t("maps_areas")}</th><th>${t("method")}</th><th>${t("chance")}</th><th>${t("games")}</th></tr></thead><tbody>${encRows}</tbody></table>`
+          ? `<div class="data-scroll"><table class="data-table enc-table"><thead><tr><th>${t("maps_areas")}</th><th>${t("method")}</th><th>${t("chance")}</th><th>${t("games")}</th></tr></thead><tbody>${encRows}</tbody></table></div>`
           : `<p class="muted">${t("no_encounters")}</p>`
       }
     `;
@@ -349,6 +404,7 @@ export async function abre_ficha(idOuSlug, { onPick } = {}) {
     drawer.querySelectorAll("[data-evo]").forEach((btn) => {
       btn.addEventListener("click", () => abre_ficha(btn.dataset.evo, { onPick }));
     });
+    wire_cries(drawer);
     await wire_moves(drawer, ficha);
   } catch (err) {
     console.error(err);
@@ -386,14 +442,33 @@ export function row_html(p) {
   const src = art_src(p.id, mode);
   const stats = p.stats || {};
   const st = (k) => (stats[k] != null ? stats[k] : "—");
+  const keys = [
+    "hp",
+    "attack",
+    "defense",
+    "special-attack",
+    "special-defense",
+    "speed",
+  ];
   return `
     <button type="button" class="dex-row" data-id="${p.id}" title="${p.name}">
       <span class="dex-row__num">No. ${String(p.id).padStart(4, "0")}</span>
       <img class="dex-row__art" src="${src}" alt="" loading="lazy" width="56" height="56" ${art_onerror_attr(p.id, mode)}>
       <span class="dex-row__name">${p.name}</span>
       <span class="dex-row__types">${(p.types || []).map(type_pill).join("")}</span>
-      <span class="dex-row__stats" title="HP / Atk / Def / SpA / SpD / Spe">
-        <i>${st("hp")}</i><i>${st("attack")}</i><i>${st("defense")}</i><i>${st("special-attack")}</i><i>${st("special-defense")}</i><i>${st("speed")}</i>
-      </span>
+      ${keys.map((k) => `<span class="dex-row__stat">${st(k)}</span>`).join("")}
     </button>`;
 }
+
+export function list_header_html() {
+  const stats = ["HP", "Atk", "Def", "SpA", "SpD", "Spe"];
+  return `
+    <div class="dex-list-head" aria-hidden="true">
+      <span>${t("col_num")}</span>
+      <span></span>
+      <span>${t("col_name")}</span>
+      <span>${t("col_types")}</span>
+      ${stats.map((s) => `<span class="dex-list-head__stat">${s}</span>`).join("")}
+    </div>`;
+}
+

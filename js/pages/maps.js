@@ -216,27 +216,34 @@ async function mostra_area(areaName, btn) {
 
     painelSub.textContent = `${t("maps_lives_here")} · ${mons.length}`;
 
+    const pretty = (s) =>
+      String(s || "")
+        .replace(/-/g, " ")
+        .replace(/\b\w/g, (c) => c.toUpperCase());
+
     encontros.innerHTML = `
-      <div class="dex-grid dex-grid_compact">
+      <div class="enc-grid">
         ${mons
           .map((m) => {
             const name = m.pokemon.name;
             const idMatch = m.pokemon.url.match(/\/(\d+)\/?$/);
             const id = idMatch ? idMatch[1] : name;
             const versions = (m.version_details || [])
-              .map((v) => v.version.name)
-              .slice(0, 3)
-              .join(", ");
-            return `<button type="button" class="dex-cell" data-id="${id}">
-              <img src="${sprite_url(id)}" alt="" loading="lazy" width="64" height="64">
-              <span class="dex-cell__name">${capitalize(name)}</span>
-              <span class="dex-cell__num">${versions}</span>
-            </button>`;
+              .map((v) => pretty(v.version.name))
+              .slice(0, 4);
+            return `
+              <button type="button" class="enc-card" data-id="${id}" title="${capitalize(name)}">
+                <img class="enc-card__art" src="${sprite_url(id)}" alt="" loading="lazy" width="56" height="56">
+                <span class="enc-card__body">
+                  <span class="enc-card__name">${capitalize(name)}</span>
+                  <span class="enc-card__vers">${versions.map((v) => `<i>${v}</i>`).join("")}</span>
+                </span>
+              </button>`;
           })
           .join("")}
       </div>`;
 
-    encontros.querySelectorAll(".dex-cell").forEach((cell) => {
+    encontros.querySelectorAll(".enc-card").forEach((cell) => {
       cell.addEventListener("click", () => abre_ficha(cell.dataset.id));
     });
   } catch (err) {

@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>ROMs — Popokedex</title>
+  <title>Donate — Popokedex</title>
   <script>
     (() => {
       const v = localStorage.getItem("popo_theme");
@@ -14,15 +14,18 @@
     })();
   </script>
   <link rel="stylesheet" href="../css/app.css">
-  <script type="module" src="../js/pages/roms.js"></script>
+  <script type="module" src="../js/pages/donate.js"></script>
 </head>
 <body>
   <div class="wrap">
     <header data-shell-header></header>
-    <section class="hero">
-      <h1 data-i18n="card_roms_title"></h1>
-      <p data-i18n="roms_soon"></p>
-      <p class="muted" data-i18n="roms_note"></p>
+    <section class="donate-page">
+      <h1 class="page-title" data-i18n="donate_title"></h1>
+      <p class="donate-lead" data-i18n="donate_lead"></p>
+      <div class="donate-card panel">
+        <h2 data-i18n="donate_soon_title"></h2>
+        <p class="muted" data-i18n="donate_soon_body"></p>
+      </div>
     </section>
   </div>
   <footer data-shell-footer></footer>
