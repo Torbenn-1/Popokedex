@@ -197,6 +197,53 @@ export async function pega_species(idOuSlug) {
   return buceta(`pokemon-species/${idOuSlug}`);
 }
 
+export async function pega_form(idOuSlug) {
+  return buceta(`pokemon-form/${idOuSlug}`);
+}
+
+/** rótulo curto da forma (A, B, Meadow, …) */
+export function rotulo_forma(form) {
+  const fn = form?.form_name || "";
+  if (!fn) return "";
+  if (fn === "exclamation") return "!";
+  if (fn === "question") return "?";
+  if (fn.length === 1) return fn.toUpperCase();
+  return fn
+    .split("-")
+    .map((w) => w.charAt(0).toUpperCase() + w.slice(1))
+    .join(" ");
+}
+
+/** detalhes das formas cosméticas (Unown, Vivillon, …) */
+export async function carrega_formas(formSlugs) {
+  if (!formSlugs?.length) return [];
+  return mapa_em_lotes(
+    formSlugs,
+    async (slug) => {
+      try {
+        const f = await pega_form(slug);
+        const label =
+          rotulo_forma(f) ||
+          nome_localizado(f.names, slug).replace(/^.*?\s/, "") ||
+          slug;
+        return {
+          slug: f.name,
+          form_name: f.form_name || "",
+          label,
+          is_default: !!f.is_default,
+          sprites: {
+            front: f.sprites?.front_default || "",
+            shiny: f.sprites?.front_shiny || f.sprites?.front_default || "",
+          },
+        };
+      } catch (_) {
+        return null;
+      }
+    },
+    6
+  ).then((rows) => rows.filter(Boolean));
+}
+
 export async function pega_ability(idOuSlug) {
   return buceta(`ability/${idOuSlug}`);
 }
@@ -300,6 +347,12 @@ export async function caraioo_ficha(idOuSlug) {
     encounters,
     evo,
     species_id: sp.id,
+    species_slug: sp.name,
+    form_slugs: (mon.forms || []).map((f) => f.name),
+    varieties: (sp.varieties || []).map((v) => ({
+      slug: v.pokemon.name,
+      is_default: !!v.is_default,
+    })),
     sprites_all: {
       home: mon.sprites.other?.home?.front_default || "",
       home_shiny: mon.sprites.other?.home?.front_shiny || "",
@@ -315,16 +368,21 @@ export function footprint_url(speciesId) {
   return `https://veekun.com/dex/media/pokemon/footprints/${speciesId}.png`;
 }
 
-export function sprite_url(id) {
-  return `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/${id}.png`;
+export function sprite_url(id, { shiny = false } = {}) {
+  const base = "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon";
+  return shiny ? `${base}/shiny/${id}.png` : `${base}/${id}.png`;
 }
 
-export function art3d_url(id) {
-  return `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/home/${id}.png`;
+export function art3d_url(id, { shiny = false } = {}) {
+  const base =
+    "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/home";
+  return shiny ? `${base}/shiny/${id}.png` : `${base}/${id}.png`;
 }
 
-export function artwork_url(id) {
-  return `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/${id}.png`;
+export function artwork_url(id, { shiny = false } = {}) {
+  const base =
+    "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork";
+  return shiny ? `${base}/shiny/${id}.png` : `${base}/${id}.png`;
 }
 
 export function gen_from_species_url(genName) {

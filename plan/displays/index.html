@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Displays — Popokedex</title>
+  <script>
+    (() => {
+      const v = localStorage.getItem("popo_theme");
+      const dark =
+        v === "dark" ||
+        (v !== "light" && matchMedia("(prefers-color-scheme: dark)").matches);
+      document.documentElement.dataset.theme = dark ? "dark" : "light";
+    })();
+  </script>
+  <link rel="stylesheet" href="../../css/app.css">
+  <script type="module" src="../../js/pages/displays.js"></script>
+</head>
+<body>
+  <div class="wrap">
+    <header data-shell-header></header>
+    <div class="dex-head">
+      <h1 class="hero page-title" style="padding-bottom:0"><span data-i18n="display_gallery"></span></h1>
+      <a class="btn btn_ghost" href="../" data-i18n="display_back_team"></a>
+    </div>
+    <p class="muted" data-i18n="display_gallery_lead"></p>
+    <div id="status" class="status-line"></div>
+    <div id="galeria" class="display-gallery"></div>
+  </div>
+  <footer data-shell-footer></footer>
+</body>
+</html>

@@ -3,12 +3,13 @@ import { theme_mode, toggle_theme } from "./theme.js";
 
 function path_prefix() {
   const parts = location.pathname.split("/").filter(Boolean);
-  const subs = new Set(["dex", "maps", "plan", "roms", "donate"]);
   const leaf = parts[parts.length - 1] || "";
-  if (subs.has(leaf)) return "../";
-  if (leaf.endsWith(".html") && parts.length >= 2 && subs.has(parts[parts.length - 2]))
-    return "../";
-  return "";
+  const dirParts = leaf.includes(".") ? parts.slice(0, -1) : parts;
+  const subs = new Set(["dex", "maps", "plan", "roms", "donate"]);
+  const subIdx = dirParts.findIndex((p) => subs.has(p));
+  if (subIdx < 0) return "";
+  const nest = dirParts.length - subIdx;
+  return "../".repeat(Math.max(1, nest));
 }
 
 export function monta_shell({ active } = {}) {

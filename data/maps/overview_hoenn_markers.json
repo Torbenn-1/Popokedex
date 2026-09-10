@@ -1,0 +1,192 @@
+{
+  "game": "hoenn",
+  "region": "hoenn",
+  "mode": "overview",
+  "image": "assets/maps/hoenn.png",
+  "imageWidth": 1507,
+  "imageHeight": 990,
+  "minZoom": -2,
+  "maxZoom": 2,
+  "markers": [
+    {
+      "id": "littleroot",
+      "label": "Littleroot Town",
+      "match": [
+        "littleroot"
+      ],
+      "x": 421.96,
+      "y": 772.2,
+      "map": "littleroot"
+    },
+    {
+      "id": "oldale",
+      "label": "Oldale Town",
+      "match": [
+        "oldale"
+      ],
+      "x": 421.96,
+      "y": 673.2,
+      "map": "oldale"
+    },
+    {
+      "id": "petalburg",
+      "label": "Petalburg City",
+      "match": [
+        "petalburg"
+      ],
+      "x": 271.26,
+      "y": 613.8,
+      "map": "petalburg"
+    },
+    {
+      "id": "rustboro",
+      "label": "Rustboro City",
+      "match": [
+        "rustboro"
+      ],
+      "x": 180.84,
+      "y": 415.8,
+      "map": "rustboro"
+    },
+    {
+      "id": "dewford",
+      "label": "Dewford Town",
+      "match": [
+        "dewford"
+      ],
+      "x": 271.26,
+      "y": 811.8,
+      "map": "dewford"
+    },
+    {
+      "id": "slateport",
+      "label": "Slateport City",
+      "match": [
+        "slateport"
+      ],
+      "x": 572.66,
+      "y": 712.8,
+      "map": "slateport"
+    },
+    {
+      "id": "mauville",
+      "label": "Mauville City",
+      "match": [
+        "mauville"
+      ],
+      "x": 723.36,
+      "y": 514.8,
+      "map": "mauville"
+    },
+    {
+      "id": "verdanturf",
+      "label": "Verdanturf Town",
+      "match": [
+        "verdanturf"
+      ],
+      "x": 572.66,
+      "y": 514.8,
+      "map": "verdanturf"
+    },
+    {
+      "id": "fallarbor",
+      "label": "Fallarbor Town",
+      "match": [
+        "fallarbor"
+      ],
+      "x": 421.96,
+      "y": 217.8,
+      "map": "fallarbor"
+    },
+    {
+      "id": "lavaridge",
+      "label": "Lavaridge Town",
+      "match": [
+        "lavaridge"
+      ],
+      "x": 572.66,
+      "y": 316.8,
+      "map": "lavaridge"
+    },
+    {
+      "id": "fortree",
+      "label": "Fortree City",
+      "match": [
+        "fortree"
+      ],
+      "x": 934.34,
+      "y": 277.2,
+      "map": "fortree"
+    },
+    {
+      "id": "lilycove",
+      "label": "Lilycove City",
+      "match": [
+        "lilycove"
+      ],
+      "x": 1175.46,
+      "y": 415.8,
+      "map": "lilycove"
+    },
+    {
+      "id": "mossdeep",
+      "label": "Mossdeep City",
+      "match": [
+        "mossdeep"
+      ],
+      "x": 1326.16,
+      "y": 514.8,
+      "map": "mossdeep"
+    },
+    {
+      "id": "sootopolis",
+      "label": "Sootopolis City",
+      "match": [
+        "sootopolis"
+      ],
+      "x": 1085.04,
+      "y": 574.2,
+      "map": "sootopolis"
+    },
+    {
+      "id": "pacifidlog",
+      "label": "Pacifidlog Town",
+      "match": [
+        "pacifidlog"
+      ],
+      "x": 874.06,
+      "y": 712.8,
+      "map": "pacifidlog"
+    },
+    {
+      "id": "ever-grande",
+      "label": "Ever Grande City",
+      "match": [
+        "ever-grande"
+      ],
+      "x": 1386.44,
+      "y": 673.2,
+      "map": "ever-grande"
+    },
+    {
+      "id": "mt-chimney",
+      "label": "Mt. Chimney",
+      "match": [
+        "mt-chimney"
+      ],
+      "x": 572.66,
+      "y": 277.2,
+      "map": "mt-chimney"
+    },
+    {
+      "id": "mt-pyre",
+      "label": "Mt. Pyre",
+      "match": [
+        "mt-pyre"
+      ],
+      "x": 1085.04,
+      "y": 475.2,
+      "map": "mt-pyre"
+    }
+  ]
+}

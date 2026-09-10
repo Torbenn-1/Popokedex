@@ -1,6 +1,15 @@
 import { monta_shell } from "../boot.js";
 import { t } from "../i18n.js";
-import { TIPOS, JOGOS, dex_cap_do_jogo } from "../../data/jogos.js";
+import {
+  TIPOS,
+  JOGOS,
+  set_ids_do_jogo,
+  set_ids_nacional_gen,
+  dexes_regionais_do_jogo,
+  nome_da_dex,
+  mapa_ordem_dex,
+  cap_nacional_do_jogo,
+} from "../../data/jogos.js";
 import { abre_ficha, cell_html, row_html, list_header_html } from "../cuzin_dex.js";
 import { capitalize } from "../boot.js";
 import { sprite_mode, set_sprite_mode } from "../sprite_mode.js";
@@ -13,6 +22,10 @@ const status = document.getElementById("status");
 const busca = document.getElementById("busca");
 const filtroTipo = document.getElementById("filtro-tipo");
 const filtroJogo = document.getElementById("filtro-gen");
+const filtroDex = document.getElementById("filtro-dex");
+const wrapFiltroDex = document.getElementById("wrap-filtro-dex");
+const filtroNational = document.getElementById("filtro-national");
+const wrapNational = document.getElementById("wrap-national");
 
 const LAYOUT_KEY = "caraio_dex_layout";
 const CHUNK_GRID = 60;
@@ -24,6 +37,8 @@ let mostrado = 0;
 let sentinel = null;
 let observer = null;
 let carregando = false;
+/** @type {Map<number, number>|null} */
+let ordemDex = null;
 
 function layout_mode() {
   return localStorage.getItem(LAYOUT_KEY) === "list" ? "list" : "grid";
@@ -54,6 +69,57 @@ filtroJogo.innerHTML =
   `<option value="">${t("filter_all")}</option>` +
   JOGOS.map((j) => `<option value="${j.slug}">${j.name}</option>`).join("");
 
+function national_on() {
+  return !!(filtroNational && filtroNational.checked);
+}
+
+function sync_filtro_dex({ reset = false } = {}) {
+  const jogo = filtroJogo.value;
+  const regionais = jogo ? dexes_regionais_do_jogo(jogo) : [];
+
+  wrapNational.hidden = !jogo;
+  if (!jogo) {
+    filtroNational.checked = false;
+  }
+
+  if (!jogo || national_on() || regionais.length <= 1) {
+    wrapFiltroDex.hidden = true;
+    if (!jogo || national_on()) {
+      filtroDex.innerHTML = "";
+      filtroDex.value = "";
+    } else if (regionais.length === 1) {
+      filtroDex.innerHTML = `<option value="${regionais[0].slug}">${nome_da_dex(regionais[0])}</option>`;
+      filtroDex.value = regionais[0].slug;
+    }
+    return;
+  }
+
+  wrapFiltroDex.hidden = false;
+  const prev = filtroDex.value;
+  filtroDex.innerHTML =
+    `<option value="__regional__">${t("filter_dex_all")}</option>` +
+    regionais.map((d) => `<option value="${d.slug}">${nome_da_dex(d)}</option>`).join("");
+
+  if (reset) {
+    filtroDex.value = "__regional__";
+  } else if (prev === "__regional__" || prev === "") {
+    filtroDex.value = "__regional__";
+  } else if (regionais.some((d) => d.slug === prev)) {
+    filtroDex.value = prev;
+  } else {
+    filtroDex.value = "__regional__";
+  }
+}
+
+function ids_filtro_atual() {
+  const jogo = filtroJogo.value;
+  if (!jogo) return null;
+  if (national_on()) return set_ids_nacional_gen(jogo);
+  const dex = filtroDex.value || "__regional__";
+  if (dex === "__regional__") return set_ids_do_jogo(jogo, "__regional__");
+  return set_ids_do_jogo(jogo, dex);
+}
+
 async function monta_catalogo() {
   status.textContent = t("loading");
   await carrega_slim();
@@ -78,18 +144,35 @@ function atualiza_filtro_tipo() {
 function filtra() {
   const q = (busca.value || "").trim().toLowerCase();
   const jogo = filtroJogo.value;
-  const cap = jogo ? dex_cap_do_jogo(jogo) : 0;
+  const dex = filtroDex.value;
+  const noJogo = ids_filtro_atual();
+
+  if (jogo && !national_on()) {
+    ordemDex = mapa_ordem_dex(jogo, dex || "__regional__");
+  } else {
+    ordemDex = null;
+  }
+
   let lista = catalogo;
   if (q) {
     lista = lista.filter(
       (p) =>
         p.name.toLowerCase().includes(q) ||
         String(p.id) === q ||
+        (ordemDex && String(ordemDex.get(p.id)) === q) ||
         p.slug.includes(q.replace(/\s+/g, "-"))
     );
   }
-  if (cap) lista = lista.filter((p) => p.id <= cap);
+  if (noJogo) lista = lista.filter((p) => noJogo.has(p.id));
   if (ids_do_tipo) lista = lista.filter((p) => ids_do_tipo.has(p.id));
+
+  if (ordemDex) {
+    lista = [...lista].sort(
+      (a, b) => (ordemDex.get(a.id) || 1e9) - (ordemDex.get(b.id) || 1e9)
+    );
+  } else if (national_on()) {
+    lista = [...lista].sort((a, b) => a.id - b.id);
+  }
   return lista;
 }
 
@@ -124,8 +207,22 @@ function anexa_chunk(slice) {
   const wrap = document.createElement("div");
   wrap.innerHTML =
     lm === "list"
-      ? slice.map((p) => row_html(p)).join("")
-      : slice.map((p) => cell_html(p.id, p.name, { types: p.types })).join("");
+      ? slice
+          .map((p) =>
+            row_html({
+              ...p,
+              dexNum: ordemDex?.get(p.id),
+            })
+          )
+          .join("")
+      : slice
+          .map((p) =>
+            cell_html(p.id, p.name, {
+              types: p.types,
+              dexNum: ordemDex?.get(p.id),
+            })
+          )
+          .join("");
   const nodes = [...wrap.children];
   grade.append(...nodes);
   nodes.forEach((btn) => {
@@ -144,7 +241,11 @@ async function carrega_mais() {
     const chunk = layout_mode() === "list" ? CHUNK_LIST : CHUNK_GRID;
     const slice = listaAtual.slice(mostrado, mostrado + chunk);
     mostrado += slice.length;
-    status.textContent = `${mostrado} / ${listaAtual.length}`;
+    const extra =
+      national_on() && filtroJogo.value
+        ? ` · Nat. #${cap_nacional_do_jogo(filtroJogo.value)}`
+        : "";
+    status.textContent = `${mostrado} / ${listaAtual.length}${extra}`;
     anexa_chunk(slice);
     if (sentinel) sentinel.hidden = mostrado >= listaAtual.length;
   } finally {
@@ -187,7 +288,16 @@ document.querySelectorAll("[data-layout]").forEach((btn) => {
 
 busca.addEventListener("input", () => pinta(true));
 filtroTipo.addEventListener("change", atualiza_filtro_tipo);
-filtroJogo.addEventListener("change", () => pinta(true));
+filtroJogo.addEventListener("change", () => {
+  filtroNational.checked = false;
+  sync_filtro_dex({ reset: true });
+  pinta(true);
+});
+filtroDex.addEventListener("change", () => pinta(true));
+filtroNational.addEventListener("change", () => {
+  sync_filtro_dex();
+  pinta(true);
+});
 
 document.addEventListener("keydown", (e) => {
   if (e.key === "/" && document.activeElement !== busca) {
@@ -197,6 +307,7 @@ document.addEventListener("keydown", (e) => {
 });
 
 sync_toggles();
+sync_filtro_dex();
 
 (async () => {
   try {

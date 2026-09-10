@@ -5,9 +5,10 @@ import {
   pega_move,
   nome_localizado,
   mapa_em_lotes,
+  carrega_formas,
 } from "./buceta_api.js";
 import { capitalize } from "./boot.js";
-import { sprite_mode, art_src, art_onerror_attr } from "./sprite_mode.js";
+import { sprite_mode, art_src, art_onerror_attr, form_art_src, form_art_onerror_attr, form_art_urls } from "./sprite_mode.js";
 import { TIPOS, mult_ataque } from "../data/jogos.js";
 import { type_icon_html } from "./type_icons.js";
 
@@ -111,6 +112,131 @@ function lista_version_groups(moves_raw) {
 
 function pretty_slug(s) {
   return capitalize(String(s || "").replace(/-/g, " "));
+}
+
+function variety_label(slug, speciesSlug) {
+  const s = String(slug || "");
+  const base = String(speciesSlug || "");
+  if (!s || s === base) return t("form_default");
+  const prefix = base + "-";
+  if (s.startsWith(prefix)) return pretty_slug(s.slice(prefix.length));
+  return pretty_slug(s);
+}
+
+function varieties_html(ficha) {
+  const list = ficha.varieties || [];
+  if (list.length <= 1) return "";
+  return `
+    <h3 class="section-title">${t("varieties")}</h3>
+    <div class="form-variants" data-varieties>
+      ${list
+        .map((v) => {
+          const on = v.slug === ficha.slug ? " form-chip_on" : "";
+          const label = variety_label(v.slug, ficha.species_slug);
+          return `<button type="button" class="form-chip form-chip_text${on}" data-variety="${v.slug}" title="${label}">${label}</button>`;
+        })
+        .join("")}
+    </div>`;
+}
+
+function forms_host_html(ficha) {
+  if ((ficha.form_slugs || []).length <= 1) return "";
+  return `
+    <h3 class="section-title">${t("forms")}</h3>
+    <div class="form-grid" data-forms-host>
+      <p class="muted">${t("loading")}</p>
+    </div>`;
+}
+
+async function wire_forms(drawer, ficha, artState) {
+  const host = drawer.querySelector("[data-forms-host]");
+  if (!host) return;
+  const forms = await carrega_formas(ficha.form_slugs);
+  if (!forms.length) {
+    const title = host.previousElementSibling;
+    if (title?.classList?.contains("section-title")) title.remove();
+    host.remove();
+    return;
+  }
+
+  const speciesId = ficha.species_id || ficha.id;
+  artState.speciesId = speciesId;
+  const mode = sprite_mode();
+  const current =
+    forms.find((f) => f.is_default) ||
+    forms.find((f) => f.slug === ficha.slug) ||
+    forms[0];
+
+  host.innerHTML = forms
+    .map((f) => {
+      const on = f.slug === current.slug ? " form-chip_on" : "";
+      const src = form_art_src(speciesId, f, { mode });
+      const err = form_art_onerror_attr(speciesId, f, { mode });
+      const pixClass = mode === "2d" ? " form-chip_pixel" : "";
+      return `<button type="button" class="form-chip${pixClass}${on}" data-form="${f.slug}" title="${f.label}">
+        <img src="${src}" alt="" loading="lazy" width="48" height="48" ${err}>
+        <span>${f.label}</span>
+      </button>`;
+    })
+    .join("");
+
+  const formTag = drawer.querySelector("[data-form-tag]");
+
+  const set_form_img = (img, f, shiny) => {
+    const m = sprite_mode();
+    const u = form_art_urls(speciesId, f, { shiny, mode: m });
+    img.dataset.fb = "";
+    img.src = u.primary;
+    img.classList.toggle("art_pixel", m === "2d");
+    img.onerror = () => {
+      if (!img.dataset.fb) {
+        img.dataset.fb = "1";
+        img.src = u.fallback;
+      } else if (img.dataset.fb === "1") {
+        img.dataset.fb = "2";
+        img.src = u.last;
+        img.onerror = null;
+      }
+    };
+  };
+
+  const applyForm = (f) => {
+    artState.form = f;
+    artState.mode = "form";
+    const shinyOn = !!drawer.querySelector("[data-shiny]")?.dataset.on;
+    const img = drawer.querySelector("[data-art]");
+    if (img) set_form_img(img, f, shinyOn);
+    if (formTag) {
+      formTag.textContent = f.label ? `· ${f.label}` : "";
+      formTag.hidden = !f.label;
+    }
+    host.querySelectorAll(".form-chip").forEach((b) => {
+      b.classList.toggle("form-chip_on", b.dataset.form === f.slug);
+    });
+  };
+
+  if (current?.label && formTag) {
+    formTag.textContent = `· ${current.label}`;
+    formTag.hidden = false;
+  }
+
+  if (current) applyForm(current);
+
+  host.querySelectorAll("[data-form]").forEach((btn) => {
+    btn.addEventListener("click", () => {
+      const f = forms.find((x) => x.slug === btn.dataset.form);
+      if (f) applyForm(f);
+    });
+  });
+}
+
+function wire_varieties(drawer, { onPick } = {}) {
+  drawer.querySelectorAll("[data-variety]").forEach((btn) => {
+    btn.addEventListener("click", () => {
+      if (btn.classList.contains("form-chip_on")) return;
+      abre_ficha(btn.dataset.variety, { onPick });
+    });
+  });
 }
 
 function render_move_rows(moves) {
@@ -255,6 +381,7 @@ export async function abre_ficha(idOuSlug, { onPick } = {}) {
     const weak = fraquezas(ficha.types);
     const mode = sprite_mode();
     const art0 = pick_art(ficha, { mode });
+    const artState = { mode: "default", form: null };
 
     const encRows = (ficha.encounters || [])
       .slice(0, 25)
@@ -283,8 +410,8 @@ export async function abre_ficha(idOuSlug, { onPick } = {}) {
           <img class="art" data-art src="${art0}" alt="${ficha.name}">
         </div>
         <div class="portal-hero__meta">
-          <p class="portal-num">No. ${String(ficha.id).padStart(4, "0")}</p>
-          <h2 class="portal-name">${ficha.name}</h2>
+          <p class="portal-num">No. ${String(ficha.species_id || ficha.id).padStart(4, "0")}</p>
+          <h2 class="portal-name">${ficha.name}<span class="portal-form-tag" data-form-tag hidden></span></h2>
           ${ficha.genus ? `<p class="portal-genus">${ficha.genus}</p>` : ""}
           <div class="portal-types">${ficha.types.map(type_pill).join("")}</div>
           <div class="toolbar" style="margin-top:0.75rem">
@@ -299,6 +426,9 @@ export async function abre_ficha(idOuSlug, { onPick } = {}) {
         <div><span class="muted">${t("weight")}</span><strong>${(ficha.weight / 10).toFixed(1)} kg</strong></div>
         <div><span class="muted">${t("habitat")}</span><strong>${pretty_slug(ficha.habitat) || "—"}</strong></div>
       </div>
+
+      ${varieties_html(ficha)}
+      ${forms_host_html(ficha)}
 
       ${
         weak.length
@@ -346,7 +476,9 @@ export async function abre_ficha(idOuSlug, { onPick } = {}) {
           .map(
             (n, i) =>
               `${i ? `<span class="evo-chain__sep" aria-hidden="true">→</span>` : ""}
-               <button type="button" class="evo-btn${n === ficha.slug ? " evo-btn_on" : ""}" data-evo="${n}">${capitalize(n)}</button>`
+               <button type="button" class="evo-btn${
+                 n === ficha.species_slug || n === ficha.slug ? " evo-btn_on" : ""
+               }" data-evo="${n}">${capitalize(n)}</button>`
           )
           .join("")}
       </div>
@@ -393,9 +525,31 @@ export async function abre_ficha(idOuSlug, { onPick } = {}) {
       const img = drawer.querySelector("[data-art]");
       const btn = ev.currentTarget;
       const on = !!btn.dataset.on;
-      img.src = pick_art(ficha, { shiny: !on, mode: sprite_mode() });
-      btn.dataset.on = on ? "" : "1";
-      btn.textContent = on ? t("shiny") : t("normal_sprite");
+      const next = !on;
+      if (artState.mode === "form" && artState.form) {
+        const m = sprite_mode();
+        const u = form_art_urls(artState.speciesId || ficha.species_id, artState.form, {
+          shiny: next,
+          mode: m,
+        });
+        img.dataset.fb = "";
+        img.src = u.primary;
+        img.classList.toggle("art_pixel", m === "2d");
+        img.onerror = () => {
+          if (!img.dataset.fb) {
+            img.dataset.fb = "1";
+            img.src = u.fallback;
+          } else if (img.dataset.fb === "1") {
+            img.dataset.fb = "2";
+            img.src = u.last;
+            img.onerror = null;
+          }
+        };
+      } else {
+        img.src = pick_art(ficha, { shiny: next, mode: sprite_mode() });
+      }
+      btn.dataset.on = next ? "1" : "";
+      btn.textContent = next ? t("normal_sprite") : t("shiny");
     });
     drawer.querySelector("[data-add]")?.addEventListener("click", () => {
       onPick?.(ficha);
@@ -404,8 +558,9 @@ export async function abre_ficha(idOuSlug, { onPick } = {}) {
     drawer.querySelectorAll("[data-evo]").forEach((btn) => {
       btn.addEventListener("click", () => abre_ficha(btn.dataset.evo, { onPick }));
     });
+    wire_varieties(drawer, { onPick });
     wire_cries(drawer);
-    await wire_moves(drawer, ficha);
+    await Promise.all([wire_moves(drawer, ficha), wire_forms(drawer, ficha, artState)]);
   } catch (err) {
     console.error(err);
     drawer.innerHTML = `<p class="status-line">${t("err_load")}</p>
@@ -415,11 +570,11 @@ export async function abre_ficha(idOuSlug, { onPick } = {}) {
 }
 
 /** card estilo portal — capa ondulada + tipo + círculo + arte */
-export function cell_html(id, name, { types = [] } = {}) {
+export function cell_html(id, name, { types = [], dexNum } = {}) {
   const mode = sprite_mode();
   const src = art_src(id, mode);
   const pix = mode === "2d" ? " poke-card_pixel" : "";
-  const num = String(id).padStart(4, "0");
+  const num = String(dexNum != null ? dexNum : id).padStart(4, "0");
   const primary = types[0] || "normal";
   const typeBadge = type_icon_html(primary);
   return `
@@ -450,9 +605,10 @@ export function row_html(p) {
     "special-defense",
     "speed",
   ];
+  const num = p.dexNum != null ? p.dexNum : p.id;
   return `
     <button type="button" class="dex-row" data-id="${p.id}" title="${p.name}">
-      <span class="dex-row__num">No. ${String(p.id).padStart(4, "0")}</span>
+      <span class="dex-row__num">No. ${String(num).padStart(4, "0")}</span>
       <img class="dex-row__art" src="${src}" alt="" loading="lazy" width="56" height="56" ${art_onerror_attr(p.id, mode)}>
       <span class="dex-row__name">${p.name}</span>
       <span class="dex-row__types">${(p.types || []).map(type_pill).join("")}</span>

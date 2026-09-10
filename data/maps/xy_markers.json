@@ -1,0 +1,163 @@
+{
+  "game": "xy",
+  "region": "kalos",
+  "mode": "overview",
+  "image": "assets/maps/kalos.png",
+  "imageWidth": 1507,
+  "imageHeight": 989,
+  "minZoom": -2,
+  "maxZoom": 2,
+  "markers": [
+    {
+      "id": "vaniville",
+      "label": "Vaniville Town",
+      "match": [
+        "vaniville"
+      ],
+      "x": 1085.04,
+      "y": 810.98,
+      "map": "vaniville"
+    },
+    {
+      "id": "aquacorde",
+      "label": "Aquacorde Town",
+      "match": [
+        "aquacorde"
+      ],
+      "x": 1024.76,
+      "y": 712.08,
+      "map": "aquacorde"
+    },
+    {
+      "id": "santalune",
+      "label": "Santalune City",
+      "match": [
+        "santalune"
+      ],
+      "x": 934.34,
+      "y": 613.18,
+      "map": "santalune"
+    },
+    {
+      "id": "lumiose",
+      "label": "Lumiose City",
+      "match": [
+        "lumiose"
+      ],
+      "x": 783.64,
+      "y": 474.72,
+      "map": "lumiose"
+    },
+    {
+      "id": "camphrier",
+      "label": "Camphrier Town",
+      "match": [
+        "camphrier"
+      ],
+      "x": 572.66,
+      "y": 474.72,
+      "map": "camphrier"
+    },
+    {
+      "id": "cyllage",
+      "label": "Cyllage City",
+      "match": [
+        "cyllage"
+      ],
+      "x": 331.54,
+      "y": 514.28,
+      "map": "cyllage"
+    },
+    {
+      "id": "geosenge",
+      "label": "Geosenge Town",
+      "match": [
+        "geosenge"
+      ],
+      "x": 271.26,
+      "y": 375.82,
+      "map": "geosenge"
+    },
+    {
+      "id": "shalour",
+      "label": "Shalour City",
+      "match": [
+        "shalour"
+      ],
+      "x": 421.96,
+      "y": 316.48,
+      "map": "shalour"
+    },
+    {
+      "id": "coumarine",
+      "label": "Coumarine City",
+      "match": [
+        "coumarine"
+      ],
+      "x": 632.94,
+      "y": 276.92,
+      "map": "coumarine"
+    },
+    {
+      "id": "laverre",
+      "label": "Laverre City",
+      "match": [
+        "laverre"
+      ],
+      "x": 934.34,
+      "y": 217.58,
+      "map": "laverre"
+    },
+    {
+      "id": "dendemille",
+      "label": "Dendemille Town",
+      "match": [
+        "dendemille"
+      ],
+      "x": 1085.04,
+      "y": 316.48,
+      "map": "dendemille"
+    },
+    {
+      "id": "anistar",
+      "label": "Anistar City",
+      "match": [
+        "anistar"
+      ],
+      "x": 1235.74,
+      "y": 415.38,
+      "map": "anistar"
+    },
+    {
+      "id": "couriway",
+      "label": "Couriway Town",
+      "match": [
+        "couriway"
+      ],
+      "x": 1235.74,
+      "y": 543.95,
+      "map": "couriway"
+    },
+    {
+      "id": "snowbelle",
+      "label": "Snowbelle City",
+      "match": [
+        "snowbelle"
+      ],
+      "x": 1085.04,
+      "y": 613.18,
+      "map": "snowbelle"
+    },
+    {
+      "id": "kiloude",
+      "label": "Kiloude City",
+      "match": [
+        "kiloude"
+      ],
+      "x": 1175.46,
+      "y": 771.42,
+      "map": "kiloude"
+    }
+  ],
+  "aliasOf": "overview_kalos"
+}

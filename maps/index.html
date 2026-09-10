@@ -18,39 +18,50 @@
   <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
   <script type="module" src="../js/pages/maps.js"></script>
 </head>
-<body>
+<body class="page-maps">
   <div class="wrap wrap_maps">
     <header data-shell-header></header>
-    <h1 class="hero" style="padding-bottom:0.5rem"><span data-i18n="nav_maps"></span></h1>
-    <div class="panel toolbar">
-      <label>
-        <span data-i18n="maps_pick"></span>
-        <select id="jogo-mapa"></select>
-      </label>
-      <label class="chk">
-        <input type="checkbox" id="filtro-versao" checked>
-        <span data-i18n="maps_filter_ver"></span>
-      </label>
-      <a class="btn btn_ghost" id="link-pokemaps" href="https://pokemaps.net/maps" target="_blank" rel="noopener noreferrer" data-i18n="maps_pokemaps"></a>
-    </div>
 
-    <div class="maps-stage">
-      <div class="map-viewport panel">
-        <div id="map-stage" class="map-stage-inner">
-          <p class="map-empty muted" data-i18n="maps_empty"></p>
-        </div>
-        <div class="map-hint muted" data-i18n="maps_click_hint"></div>
+    <section id="map-picker" class="map-picker">
+      <div class="map-picker__head">
+        <h1 class="map-picker__brand">
+          <span class="map-picker__poke">Pokémon</span>
+          <span class="map-picker__map">MAP</span>
+        </h1>
+        <p class="map-picker__sub" data-i18n="maps_picker_sub"></p>
+      </div>
+      <div id="map-cards" class="map-cards"></div>
+    </section>
+
+    <section id="map-explorer" class="map-explorer" hidden>
+      <div class="panel toolbar">
+        <button type="button" class="btn btn_ghost" id="btn-voltar-picker" data-i18n="maps_back"></button>
+        <span class="toolbar-title" id="explorer-title"></span>
+        <label class="chk">
+          <input type="checkbox" id="filtro-versao" checked>
+          <span data-i18n="maps_filter_ver"></span>
+        </label>
+        <a class="btn btn_ghost" id="link-pokemaps" href="https://pokemaps.net/maps" target="_blank" rel="noopener noreferrer" data-i18n="maps_pokemaps"></a>
       </div>
 
-      <aside class="map-panel panel" aria-label="Map panel">
-        <h2 class="section-title" id="painel-titulo" data-i18n="maps_panel_title"></h2>
-        <p class="muted" id="painel-sub" data-i18n="maps_click_hint"></p>
-        <input type="search" id="busca-area" data-i18n-placeholder="maps_search" autocomplete="off" class="map-search">
-        <ul id="areas" class="area-list"></ul>
-        <h3 class="section-title" data-i18n="maps_encounters"></h3>
-        <div id="encontros" data-i18n="maps_empty"></div>
-      </aside>
-    </div>
+      <div class="maps-stage">
+        <div class="map-viewport panel">
+          <div id="map-stage" class="map-stage-inner">
+            <p class="map-empty muted" data-i18n="maps_empty"></p>
+          </div>
+          <div class="map-hint muted" data-i18n="maps_click_hint"></div>
+        </div>
+
+        <aside class="map-panel panel" aria-label="Map panel">
+          <h2 class="section-title" id="painel-titulo" data-i18n="maps_panel_title"></h2>
+          <p class="muted" id="painel-sub" data-i18n="maps_click_hint"></p>
+          <input type="search" id="busca-area" data-i18n-placeholder="maps_search" autocomplete="off" class="map-search">
+          <ul id="areas" class="area-list"></ul>
+          <h3 class="section-title" data-i18n="maps_encounters"></h3>
+          <div id="encontros" data-i18n="maps_empty"></div>
+        </aside>
+      </div>
+    </section>
 
     <div id="drawer-bg" class="drawer-bg"></div>
     <aside id="drawer" class="drawer" aria-live="polite"></aside>

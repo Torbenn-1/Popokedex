@@ -17,36 +17,93 @@
   <script type="module" src="../js/pages/plan.js"></script>
 </head>
 <body>
-  <div class="wrap">
+  <div class="wrap wrap_plan">
     <header data-shell-header></header>
-    <h1 class="hero" style="padding-bottom:0.5rem"><span data-i18n="nav_team"></span></h1>
-    <div class="panel">
-      <label>
-        <span data-i18n="pick_game"></span>
+
+    <div class="builder-top">
+      <div class="builder-top__title">
+        <h1 class="builder-title" data-i18n="nav_team"></h1>
+        <p class="muted builder-lead" data-i18n="builder_lead"></p>
+      </div>
+      <label class="builder-game">
+        <span class="muted" data-i18n="pick_game"></span>
         <select id="jogo"></select>
       </label>
-      <h2 class="section-title" data-i18n="your_team"></h2>
-      <div id="slots" class="team-slots"></div>
-      <div class="toolbar">
-        <button type="button" class="btn" id="btn-rand" data-i18n="randomize"></button>
-        <button type="button" class="btn btn_ghost" id="btn-clear" data-i18n="clear_team"></button>
-        <button type="button" class="btn btn_ghost" id="btn-copy" data-i18n="copy_link"></button>
-        <button type="button" class="btn btn_ghost" id="btn-analise" data-i18n="show_analysis"></button>
-      </div>
-      <div id="analise" class="hidden">
-        <h3 class="section-title" data-i18n="defense"></h3>
-        <div id="defesa" class="analysis-grid"></div>
-        <h3 class="section-title" data-i18n="coverage"></h3>
-        <div id="cobertura" class="analysis-grid"></div>
-      </div>
     </div>
-    <div class="panel toolbar">
-      <input type="search" id="busca-time" data-i18n-placeholder="search_ph" autocomplete="off">
+
+    <section class="builder-squad panel" aria-labelledby="squad-heading">
+      <div class="builder-squad__head">
+        <h2 id="squad-heading" class="section-title" data-i18n="your_team"></h2>
+        <p id="moves-hint" class="muted moves-hint"></p>
+        <div class="builder-actions">
+          <a class="btn" id="btn-details-page" href="details/" data-i18n="details_page_link"></a>
+          <button type="button" class="btn btn_ghost" id="btn-analise" data-i18n="show_analysis"></button>
+          <button type="button" class="btn btn_ghost" id="btn-copy" data-i18n="copy_link"></button>
+          <button type="button" class="btn btn_ghost" id="btn-rand" data-i18n="randomize"></button>
+          <button type="button" class="btn btn_ghost" id="btn-clear" data-i18n="clear_team"></button>
+        </div>
+      </div>
+      <div id="slots" class="team-slots team-slots_builder"></div>
+      <div id="analise" class="analise-panel hidden"></div>
+    </section>
+
+    <div class="builder-work">
+      <aside class="plan-layout__pool panel builder-pool">
+        <div class="builder-pool__head">
+          <h2 class="section-title" data-i18n="builder_pool"></h2>
+          <p class="muted" data-i18n="builder_pool_lead"></p>
+        </div>
+        <div class="toolbar plan-pool-toolbar dex-toolbar">
+          <input type="search" id="busca-time" data-i18n-placeholder="search_ph" autocomplete="off">
+          <label id="wrap-plan-dex" hidden>
+            <span class="muted" data-i18n="filter_dex"></span>
+            <select id="plan-dex"></select>
+          </label>
+          <label id="wrap-plan-national" class="dex-check">
+            <input type="checkbox" id="plan-national">
+            <span data-i18n="filter_national"></span>
+          </label>
+        </div>
+        <div id="status" class="status-line" data-i18n="loading"></div>
+        <div id="grade" class="dex-grid dex-grid_compact plan-pool-grade"></div>
+      </aside>
     </div>
-    <div id="status" class="status-line" data-i18n="loading"></div>
-    <div id="grade" class="dex-grid"></div>
-    <div id="drawer-bg" class="drawer-bg"></div>
-    <aside id="drawer" class="drawer"></aside>
+
+    <details class="builder-export panel">
+      <summary class="builder-export__sum">
+        <span data-i18n="display_title"></span>
+        <span class="muted" data-i18n="builder_export_hint"></span>
+      </summary>
+      <div class="team-display-panel">
+        <div class="team-display-panel__head">
+          <a class="btn btn_ghost" href="displays/" data-i18n="display_gallery"></a>
+        </div>
+        <p class="muted display-lead" data-i18n="display_lead"></p>
+        <div class="toolbar dex-toolbar team-display-form">
+          <label>
+            <span class="muted" data-i18n="display_name"></span>
+            <input type="text" id="display-nome" maxlength="60" autocomplete="off">
+          </label>
+          <label>
+            <span class="muted" data-i18n="display_note"></span>
+            <input type="text" id="display-nota" maxlength="120" autocomplete="off">
+          </label>
+          <label>
+            <span class="muted" data-i18n="display_sprite"></span>
+            <select id="display-sprite">
+              <option value="3d">3D</option>
+              <option value="2d">2D</option>
+            </select>
+          </label>
+          <button type="button" class="btn" id="btn-save-display" data-i18n="display_save"></button>
+          <button type="button" class="btn btn_ghost" id="btn-dl-display" data-i18n="display_download"></button>
+        </div>
+        <p id="display-status" class="status-line muted"></p>
+        <h3 class="section-title" data-i18n="display_stack"></h3>
+        <p class="muted" data-i18n="display_stack_lead"></p>
+        <div id="team-stack" class="team-stack"></div>
+      </div>
+    </details>
   </div>
   <footer data-shell-footer></footer>
 </body>

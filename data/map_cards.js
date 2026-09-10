@@ -1,0 +1,132 @@
+/**
+ * Cards da galeria de mapas (visão estilo “Pokémon MAP”).
+ * preview: caminho relativo a assets/maps/
+ */
+export const MAP_CARDS = [
+  {
+    id: "rb",
+    slug: "rby",
+    label: "RED/BLUE",
+    versions: ["red", "blue"],
+    preview: "rby/kanto_rb_preview.png",
+    tone: "rb",
+    group: "rby",
+  },
+  {
+    id: "yellow",
+    slug: "rby",
+    label: "YELLOW",
+    versions: ["yellow"],
+    preview: "rby/kanto_yellow_preview.png",
+    tone: "yellow",
+    group: "rby",
+  },
+  {
+    id: "frlg",
+    slug: "frlg",
+    label: "FIRERED / LEAFGREEN",
+    preview: "frlg/kanto_full.png",
+    tone: "default",
+    group: "kanto",
+  },
+  {
+    id: "gsc",
+    slug: "gsc",
+    label: "GOLD / SILVER / CRYSTAL",
+    preview: "gsc/world_full.png",
+    tone: "default",
+    group: "johto",
+  },
+  {
+    id: "hgss",
+    slug: "hgss",
+    label: "HEARTGOLD / SOULSILVER",
+    preview: "gsc/world_full.png",
+    tone: "default",
+    group: "johto",
+  },
+  {
+    id: "rse",
+    slug: "rse",
+    label: "RUBY / SAPPHIRE / EMERALD",
+    preview: "rse/hoenn_full.png",
+    tone: "default",
+    group: "hoenn",
+  },
+  {
+    id: "oras",
+    slug: "oras",
+    label: "OMEGA RUBY / ALPHA SAPPHIRE",
+    preview: "rse/hoenn_full.png",
+    tone: "default",
+    group: "hoenn",
+  },
+  {
+    id: "dppt",
+    slug: "dppt",
+    label: "DIAMOND / PEARL / PLATINUM",
+    preview: "sinnoh.png",
+    tone: "default",
+    group: "sinnoh",
+  },
+  {
+    id: "bdsp",
+    slug: "bdsp",
+    label: "BD / SP",
+    preview: "sinnoh.png",
+    tone: "default",
+    group: "sinnoh",
+  },
+  {
+    id: "bw",
+    slug: "bw",
+    label: "BLACK / WHITE",
+    preview: "unova.png",
+    tone: "default",
+    group: "unova",
+  },
+  {
+    id: "b2w2",
+    slug: "b2w2",
+    label: "BLACK 2 / WHITE 2",
+    preview: "unova.png",
+    tone: "default",
+    group: "unova",
+  },
+  {
+    id: "xy",
+    slug: "xy",
+    label: "X / Y",
+    preview: "kalos.png",
+    tone: "default",
+    group: "kalos",
+  },
+  {
+    id: "sm",
+    slug: "sm",
+    label: "SUN / MOON",
+    preview: "alola.png",
+    tone: "default",
+    group: "alola",
+  },
+  {
+    id: "usum",
+    slug: "usum",
+    label: "ULTRA SUN / ULTRA MOON",
+    preview: "alola.png",
+    tone: "default",
+    group: "alola",
+  },
+  {
+    id: "sv",
+    slug: "sv",
+    label: "SCARLET / VIOLET",
+    preview: "paldea.png",
+    tone: "default",
+    group: "paldea",
+  },
+];
+
+export function map_card_by_id(id) {
+  return MAP_CARDS.find((c) => c.id === id) || null;
+}

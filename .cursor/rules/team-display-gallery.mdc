@@ -1,0 +1,19 @@
+---
+description: Galeria de displays — tirar salvar do público depois
+alwaysApply: true
+---
+
+# Galeria de team displays (lembrete)
+
+**Agora (criador montando a galeria):** pode criar/salvar/apagar via `localStorage` (`caraio_team_displays_v1`) — botão Salvar em Times, página `plan/displays/`.
+
+**Antes de publicar / abrir pro público:** a galeria não deve gravar nada de visitante.
+
+Quando o usuário pedir pra tirar o salvar / preparar release:
+
+1. `lista_displays()` → só `data/creator_displays.js` (`CREATOR_DISPLAYS`)
+2. Remover `salva_display`, `apaga_display`, `STORE_KEY` e o botão **Salvar display**
+3. Visitante: só **Baixar HTML** do time atual; galeria = displays oficiais do criador no repo
+4. Migrar os times bons do localStorage do criador para `CREATOR_DISPLAYS` antes de cortar o save
+
+Arquivos: `js/team_display.js`, `js/pages/plan.js`, `js/pages/displays.js`, `plan/index.html`, `data/creator_displays.js`

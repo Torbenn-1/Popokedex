@@ -1,0 +1,144 @@
+{
+  "game": "paldea",
+  "region": "paldea",
+  "mode": "overview",
+  "image": "assets/maps/paldea.png",
+  "imageWidth": 2048,
+  "imageHeight": 2048,
+  "minZoom": -2,
+  "maxZoom": 2,
+  "markers": [
+    {
+      "id": "mesagoza",
+      "label": "Mesagoza",
+      "match": [
+        "mesagoza"
+      ],
+      "x": 983.04,
+      "y": 1126.4,
+      "map": "mesagoza"
+    },
+    {
+      "id": "cabo-pocobre",
+      "label": "Cabo Poco",
+      "match": [
+        "cabo-poco",
+        "poco-path"
+      ],
+      "x": 860.16,
+      "y": 1597.44,
+      "map": "cabo-pocobre"
+    },
+    {
+      "id": "los-platos",
+      "label": "Los Platos",
+      "match": [
+        "los-platos"
+      ],
+      "x": 921.6,
+      "y": 1392.64,
+      "map": "los-platos"
+    },
+    {
+      "id": "cortondo",
+      "label": "Cortondo",
+      "match": [
+        "cortondo"
+      ],
+      "x": 573.44,
+      "y": 1269.76,
+      "map": "cortondo"
+    },
+    {
+      "id": "cascarrafa",
+      "label": "Cascarrafa",
+      "match": [
+        "cascarrafa"
+      ],
+      "x": 450.56,
+      "y": 983.04,
+      "map": "cascarrafa"
+    },
+    {
+      "id": "porto-marinada",
+      "label": "Porto Marinada",
+      "match": [
+        "porto-marinada"
+      ],
+      "x": 245.76,
+      "y": 860.16,
+      "map": "porto-marinada"
+    },
+    {
+      "id": "medali",
+      "label": "Medali",
+      "match": [
+        "medali"
+      ],
+      "x": 778.24,
+      "y": 778.24,
+      "map": "medali"
+    },
+    {
+      "id": "zapapico",
+      "label": "Zapapico",
+      "match": [
+        "zapapico"
+      ],
+      "x": 1269.76,
+      "y": 655.36,
+      "map": "zapapico"
+    },
+    {
+      "id": "levincia",
+      "label": "Levincia",
+      "match": [
+        "levincia"
+      ],
+      "x": 1597.44,
+      "y": 983.04,
+      "map": "levincia"
+    },
+    {
+      "id": "artazon",
+      "label": "Artazon",
+      "match": [
+        "artazon"
+      ],
+      "x": 1269.76,
+      "y": 1187.84,
+      "map": "artazon"
+    },
+    {
+      "id": "montenevera",
+      "label": "Montenevera",
+      "match": [
+        "montenevera"
+      ],
+      "x": 1126.4,
+      "y": 450.56,
+      "map": "montenevera"
+    },
+    {
+      "id": "alfornada",
+      "label": "Alfornada",
+      "match": [
+        "alfornada"
+      ],
+      "x": 573.44,
+      "y": 1474.56,
+      "map": "alfornada"
+    },
+    {
+      "id": "area-zero",
+      "label": "Area Zero",
+      "match": [
+        "area-zero",
+        "zero-gate"
+      ],
+      "x": 1024.0,
+      "y": 860.16,
+      "map": "area-zero"
+    }
+  ]
+}

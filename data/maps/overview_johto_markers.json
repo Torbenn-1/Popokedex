@@ -1,0 +1,162 @@
+{
+  "game": "johto",
+  "region": "johto",
+  "mode": "overview",
+  "image": "assets/maps/johto.png",
+  "imageWidth": 1507,
+  "imageHeight": 1056,
+  "minZoom": -2,
+  "maxZoom": 2,
+  "markers": [
+    {
+      "id": "new-bark",
+      "label": "New Bark Town",
+      "match": [
+        "new-bark"
+      ],
+      "x": 1326.16,
+      "y": 580.8,
+      "map": "new-bark"
+    },
+    {
+      "id": "cherrygrove",
+      "label": "Cherrygrove City",
+      "match": [
+        "cherrygrove"
+      ],
+      "x": 1175.46,
+      "y": 654.72,
+      "map": "cherrygrove"
+    },
+    {
+      "id": "violet",
+      "label": "Violet City",
+      "match": [
+        "violet-city"
+      ],
+      "x": 934.34,
+      "y": 443.52,
+      "map": "violet"
+    },
+    {
+      "id": "azalea",
+      "label": "Azalea Town",
+      "match": [
+        "azalea"
+      ],
+      "x": 723.36,
+      "y": 760.32,
+      "map": "azalea"
+    },
+    {
+      "id": "goldenrod",
+      "label": "Goldenrod City",
+      "match": [
+        "goldenrod"
+      ],
+      "x": 632.94,
+      "y": 549.12,
+      "map": "goldenrod"
+    },
+    {
+      "id": "ecruteak",
+      "label": "Ecruteak City",
+      "match": [
+        "ecruteak"
+      ],
+      "x": 632.94,
+      "y": 295.68,
+      "map": "ecruteak"
+    },
+    {
+      "id": "olivine",
+      "label": "Olivine City",
+      "match": [
+        "olivine"
+      ],
+      "x": 331.54,
+      "y": 443.52,
+      "map": "olivine"
+    },
+    {
+      "id": "cianwood",
+      "label": "Cianwood City",
+      "match": [
+        "cianwood"
+      ],
+      "x": 180.84,
+      "y": 654.72,
+      "map": "cianwood"
+    },
+    {
+      "id": "mahogany",
+      "label": "Mahogany Town",
+      "match": [
+        "mahogany"
+      ],
+      "x": 934.34,
+      "y": 295.68,
+      "map": "mahogany"
+    },
+    {
+      "id": "blackthorn",
+      "label": "Blackthorn City",
+      "match": [
+        "blackthorn"
+      ],
+      "x": 1175.46,
+      "y": 232.32,
+      "map": "blackthorn"
+    },
+    {
+      "id": "national-park",
+      "label": "National Park",
+      "match": [
+        "national-park"
+      ],
+      "x": 632.94,
+      "y": 422.4,
+      "map": "national-park"
+    },
+    {
+      "id": "mt-mortar",
+      "label": "Mt. Mortar",
+      "match": [
+        "mt-mortar"
+      ],
+      "x": 828.85,
+      "y": 295.68,
+      "map": "mt-mortar"
+    },
+    {
+      "id": "lake-of-rage",
+      "label": "Lake of Rage",
+      "match": [
+        "lake-of-rage"
+      ],
+      "x": 934.34,
+      "y": 126.72,
+      "map": "lake-of-rage"
+    },
+    {
+      "id": "ice-path",
+      "label": "Ice Path",
+      "match": [
+        "ice-path"
+      ],
+      "x": 1085.04,
+      "y": 190.08,
+      "map": "ice-path"
+    },
+    {
+      "id": "whirl",
+      "label": "Whirl Islands",
+      "match": [
+        "whirl"
+      ],
+      "x": 331.54,
+      "y": 580.8,
+      "map": "whirl"
+    }
+  ]
+}

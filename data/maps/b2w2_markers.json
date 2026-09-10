@@ -1,0 +1,154 @@
+{
+  "game": "b2w2",
+  "region": "unova",
+  "mode": "overview",
+  "image": "assets/maps/unova.png",
+  "imageWidth": 1507,
+  "imageHeight": 989,
+  "minZoom": -2,
+  "maxZoom": 2,
+  "markers": [
+    {
+      "id": "nuvema",
+      "label": "Nuvema Town",
+      "match": [
+        "nuvema"
+      ],
+      "x": 1175.46,
+      "y": 771.42,
+      "map": "nuvema"
+    },
+    {
+      "id": "accumula",
+      "label": "Accumula Town",
+      "match": [
+        "accumula"
+      ],
+      "x": 1085.04,
+      "y": 672.52,
+      "map": "accumula"
+    },
+    {
+      "id": "striaton",
+      "label": "Striaton City",
+      "match": [
+        "striaton"
+      ],
+      "x": 1024.76,
+      "y": 543.95,
+      "map": "striaton"
+    },
+    {
+      "id": "nacrene",
+      "label": "Nacrene City",
+      "match": [
+        "nacrene"
+      ],
+      "x": 874.06,
+      "y": 573.62,
+      "map": "nacrene"
+    },
+    {
+      "id": "castelia",
+      "label": "Castelia City",
+      "match": [
+        "castelia"
+      ],
+      "x": 723.36,
+      "y": 712.08,
+      "map": "castelia"
+    },
+    {
+      "id": "nimbasa",
+      "label": "Nimbasa City",
+      "match": [
+        "nimbasa"
+      ],
+      "x": 723.36,
+      "y": 474.72,
+      "map": "nimbasa"
+    },
+    {
+      "id": "driftveil",
+      "label": "Driftveil City",
+      "match": [
+        "driftveil"
+      ],
+      "x": 482.24,
+      "y": 514.28,
+      "map": "driftveil"
+    },
+    {
+      "id": "mistralton",
+      "label": "Mistralton City",
+      "match": [
+        "mistralton"
+      ],
+      "x": 331.54,
+      "y": 375.82,
+      "map": "mistralton"
+    },
+    {
+      "id": "icirrus",
+      "label": "Icirrus City",
+      "match": [
+        "icirrus"
+      ],
+      "x": 421.96,
+      "y": 276.92,
+      "map": "icirrus"
+    },
+    {
+      "id": "opelucid",
+      "label": "Opelucid City",
+      "match": [
+        "opelucid"
+      ],
+      "x": 723.36,
+      "y": 276.92,
+      "map": "opelucid"
+    },
+    {
+      "id": "lacunosa",
+      "label": "Lacunosa Town",
+      "match": [
+        "lacunosa"
+      ],
+      "x": 1085.04,
+      "y": 276.92,
+      "map": "lacunosa"
+    },
+    {
+      "id": "undella",
+      "label": "Undella Town",
+      "match": [
+        "undella"
+      ],
+      "x": 1235.74,
+      "y": 375.82,
+      "map": "undella"
+    },
+    {
+      "id": "black-city",
+      "label": "Black City / White Forest",
+      "match": [
+        "black-city",
+        "white-forest"
+      ],
+      "x": 1326.16,
+      "y": 217.58,
+      "map": "black-city"
+    },
+    {
+      "id": "victory-road-unova",
+      "label": "Victory Road",
+      "match": [
+        "victory-road"
+      ],
+      "x": 723.36,
+      "y": 178.02,
+      "map": "victory-road-unova"
+    }
+  ],
+  "aliasOf": "overview_unova"
+}

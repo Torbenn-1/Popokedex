@@ -1,0 +1,300 @@
+{
+  "game": "kanto",
+  "region": "kanto",
+  "mode": "overview",
+  "image": "assets/maps/kanto.png",
+  "imageWidth": 1177,
+  "imageHeight": 1056,
+  "minZoom": -2,
+  "maxZoom": 2,
+  "markers": [
+    {
+      "id": "indigo-plateau",
+      "label": "Indigo Plateau",
+      "match": [
+        "indigo-plateau"
+      ],
+      "x": 94.16,
+      "y": 73.92,
+      "map": "indigo-plateau"
+    },
+    {
+      "id": "pewter-city",
+      "label": "Pewter City",
+      "match": [
+        "pewter-city"
+      ],
+      "x": 258.94,
+      "y": 126.72,
+      "map": "pewter-city"
+    },
+    {
+      "id": "mt-moon",
+      "label": "Mt. Moon",
+      "match": [
+        "mt-moon"
+      ],
+      "x": 470.8,
+      "y": 126.72,
+      "map": "mt-moon"
+    },
+    {
+      "id": "cerulean-city",
+      "label": "Cerulean City",
+      "match": [
+        "cerulean-city"
+      ],
+      "x": 729.74,
+      "y": 147.84,
+      "map": "cerulean-city"
+    },
+    {
+      "id": "cerulean-cave",
+      "label": "Cerulean Cave",
+      "match": [
+        "cerulean-cave"
+      ],
+      "x": 647.35,
+      "y": 84.48,
+      "map": "cerulean-cave"
+    },
+    {
+      "id": "route-24",
+      "label": "Route 24",
+      "match": [
+        "route-24",
+        "kanto-route-24"
+      ],
+      "x": 823.9,
+      "y": 105.6,
+      "map": "route-24"
+    },
+    {
+      "id": "route-25",
+      "label": "Route 25",
+      "match": [
+        "route-25",
+        "kanto-route-25"
+      ],
+      "x": 918.06,
+      "y": 84.48,
+      "map": "route-25"
+    },
+    {
+      "id": "viridian-city",
+      "label": "Viridian City",
+      "match": [
+        "viridian-city"
+      ],
+      "x": 211.86,
+      "y": 401.28,
+      "map": "viridian-city"
+    },
+    {
+      "id": "viridian-forest",
+      "label": "Viridian Forest",
+      "match": [
+        "viridian-forest"
+      ],
+      "x": 211.86,
+      "y": 274.56,
+      "map": "viridian-forest"
+    },
+    {
+      "id": "route-22",
+      "label": "Route 22",
+      "match": [
+        "route-22",
+        "kanto-route-22"
+      ],
+      "x": 94.16,
+      "y": 401.28,
+      "map": "route-22"
+    },
+    {
+      "id": "route-23",
+      "label": "Victory Road path",
+      "match": [
+        "route-23",
+        "kanto-route-23",
+        "victory-road"
+      ],
+      "x": 94.16,
+      "y": 232.32,
+      "map": "route-23"
+    },
+    {
+      "id": "pallet-town",
+      "label": "Pallet Town",
+      "match": [
+        "pallet-town"
+      ],
+      "x": 211.86,
+      "y": 612.48,
+      "map": "pallet-town"
+    },
+    {
+      "id": "route-1",
+      "label": "Route 1",
+      "match": [
+        "route-1",
+        "kanto-route-1"
+      ],
+      "x": 211.86,
+      "y": 506.88,
+      "map": "route-1"
+    },
+    {
+      "id": "cinnabar-island",
+      "label": "Cinnabar Island",
+      "match": [
+        "cinnabar-island"
+      ],
+      "x": 211.86,
+      "y": 929.28,
+      "map": "cinnabar-island"
+    },
+    {
+      "id": "pokemon-mansion",
+      "label": "Pok\u00e9mon Mansion",
+      "match": [
+        "pokemon-mansion"
+      ],
+      "x": 141.24,
+      "y": 887.04,
+      "map": "pokemon-mansion"
+    },
+    {
+      "id": "seafoam",
+      "label": "Seafoam Islands",
+      "match": [
+        "seafoam"
+      ],
+      "x": 470.8,
+      "y": 929.28,
+      "map": "seafoam"
+    },
+    {
+      "id": "celadon-city",
+      "label": "Celadon City",
+      "match": [
+        "celadon-city"
+      ],
+      "x": 470.8,
+      "y": 443.52,
+      "map": "celadon-city"
+    },
+    {
+      "id": "saffron-city",
+      "label": "Saffron City",
+      "match": [
+        "saffron-city"
+      ],
+      "x": 647.35,
+      "y": 443.52,
+      "map": "saffron-city"
+    },
+    {
+      "id": "vermilion-city",
+      "label": "Vermilion City",
+      "match": [
+        "vermilion-city"
+      ],
+      "x": 647.35,
+      "y": 612.48,
+      "map": "vermilion-city"
+    },
+    {
+      "id": "digletts-cave",
+      "label": "Diglett's Cave",
+      "match": [
+        "digletts-cave"
+      ],
+      "x": 564.96,
+      "y": 549.12,
+      "map": "digletts-cave"
+    },
+    {
+      "id": "lavender-town",
+      "label": "Lavender Town",
+      "match": [
+        "lavender-town"
+      ],
+      "x": 918.06,
+      "y": 443.52,
+      "map": "lavender-town"
+    },
+    {
+      "id": "pokemon-tower",
+      "label": "Pok\u00e9mon Tower",
+      "match": [
+        "pokemon-tower"
+      ],
+      "x": 988.68,
+      "y": 401.28,
+      "map": "pokemon-tower"
+    },
+    {
+      "id": "rock-tunnel",
+      "label": "Rock Tunnel",
+      "match": [
+        "rock-tunnel"
+      ],
+      "x": 918.06,
+      "y": 295.68,
+      "map": "rock-tunnel"
+    },
+    {
+      "id": "power-plant",
+      "label": "Power Plant",
+      "match": [
+        "power-plant"
+      ],
+      "x": 1012.22,
+      "y": 295.68,
+      "map": "power-plant"
+    },
+    {
+      "id": "fuchsia-city",
+      "label": "Fuchsia City",
+      "match": [
+        "fuchsia-city"
+      ],
+      "x": 647.35,
+      "y": 823.68,
+      "map": "fuchsia-city"
+    },
+    {
+      "id": "safari-zone",
+      "label": "Safari Zone",
+      "match": [
+        "safari-zone"
+      ],
+      "x": 647.35,
+      "y": 739.2,
+      "map": "safari-zone"
+    },
+    {
+      "id": "route-12",
+      "label": "Route 12",
+      "match": [
+        "route-12",
+        "kanto-route-12"
+      ],
+      "x": 918.06,
+      "y": 612.48,
+      "map": "route-12"
+    },
+    {
+      "id": "route-10",
+      "label": "Route 10",
+      "match": [
+        "route-10",
+        "kanto-route-10"
+      ],
+      "x": 918.06,
+      "y": 232.32,
+      "map": "route-10"
+    }
+  ]
+}

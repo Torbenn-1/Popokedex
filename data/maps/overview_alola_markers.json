@@ -1,0 +1,115 @@
+{
+  "game": "alola",
+  "region": "alola",
+  "mode": "overview",
+  "image": "assets/maps/alola.png",
+  "imageWidth": 1507,
+  "imageHeight": 904,
+  "minZoom": -2,
+  "maxZoom": 2,
+  "markers": [
+    {
+      "id": "iku-melemele",
+      "label": "Melemele \u2014 Iki Town",
+      "match": [
+        "iki-town",
+        "melemele"
+      ],
+      "x": 331.54,
+      "y": 379.68,
+      "map": "iku-melemele"
+    },
+    {
+      "id": "hauoli",
+      "label": "Hau'oli City",
+      "match": [
+        "hauoli",
+        "hau-oli"
+      ],
+      "x": 271.26,
+      "y": 497.2,
+      "map": "hauoli"
+    },
+    {
+      "id": "konikoni",
+      "label": "Konikoni City",
+      "match": [
+        "konikoni"
+      ],
+      "x": 632.94,
+      "y": 650.88,
+      "map": "konikoni"
+    },
+    {
+      "id": "pailolo",
+      "label": "Paniola Town",
+      "match": [
+        "paniola"
+      ],
+      "x": 723.36,
+      "y": 524.32,
+      "map": "pailolo"
+    },
+    {
+      "id": "royal-avenue",
+      "label": "Royal Avenue",
+      "match": [
+        "royal-avenue"
+      ],
+      "x": 828.85,
+      "y": 560.48,
+      "map": "royal-avenue"
+    },
+    {
+      "id": "malie",
+      "label": "Malie City",
+      "match": [
+        "malie"
+      ],
+      "x": 1085.04,
+      "y": 343.52,
+      "map": "malie"
+    },
+    {
+      "id": "tapu-village",
+      "label": "Tapu Village",
+      "match": [
+        "tapu-village"
+      ],
+      "x": 1175.46,
+      "y": 433.92,
+      "map": "tapu-village"
+    },
+    {
+      "id": "po-town",
+      "label": "Po Town",
+      "match": [
+        "po-town"
+      ],
+      "x": 1280.95,
+      "y": 289.28,
+      "map": "po-town"
+    },
+    {
+      "id": "seafolk",
+      "label": "Seafolk Village",
+      "match": [
+        "seafolk"
+      ],
+      "x": 934.34,
+      "y": 705.12,
+      "map": "seafolk"
+    },
+    {
+      "id": "vast-poni",
+      "label": "Vast Poni Canyon",
+      "match": [
+        "vast-poni",
+        "poni"
+      ],
+      "x": 828.85,
+      "y": 768.4,
+      "map": "vast-poni"
+    }
+  ]
+}

@@ -1,7 +1,9 @@
 import { monta_shell, capitalize } from "../boot.js";
 import { t } from "../i18n.js";
-import { JOGOS, jogo_por_slug } from "../../data/jogos.js";
+import { jogo_por_slug } from "../../data/jogos.js";
 import { mapa_da_regiao, pokemaps_url } from "../../data/mapa_pins.js";
+import { MAP_CARDS, map_card_by_id } from "../../data/map_cards.js";
+import { external_link } from "../../data/mapgenie.js";
 import {
   pega_regiao,
   pega_location,
@@ -12,7 +14,11 @@ import { abre_ficha } from "../cuzin_dex.js";
 
 monta_shell({ active: "maps" });
 
-const sel = document.getElementById("jogo-mapa");
+const picker = document.getElementById("map-picker");
+const explorer = document.getElementById("map-explorer");
+const cardsEl = document.getElementById("map-cards");
+const btnVoltar = document.getElementById("btn-voltar-picker");
+const explorerTitle = document.getElementById("explorer-title");
 const areasUl = document.getElementById("areas");
 const encontros = document.getElementById("encontros");
 const buscaArea = document.getElementById("busca-area");
@@ -21,16 +27,17 @@ const mapStage = document.getElementById("map-stage");
 const painelTitulo = document.getElementById("painel-titulo");
 const painelSub = document.getElementById("painel-sub");
 const linkPokemaps = document.getElementById("link-pokemaps");
-
-sel.innerHTML =
-  `<option value="">—</option>` +
-  JOGOS.map((j) => `<option value="${j.slug}">${j.name}</option>`).join("");
+const hintEl = document.querySelector(".map-hint");
 
 /** @type {{name:string,label:string,loc:string}[]} */
 let areasCache = [];
 let jogoAtual = null;
+/** @type {ReturnType<typeof map_card_by_id>} */
+let cardAtual = null;
 let mapaMeta = null;
 let pinAtivo = null;
+/** @type {string[] | null} */
+let versoesOverride = null;
 
 /** @type {import("leaflet").Map | null} */
 let leafletMap = null;
@@ -49,9 +56,74 @@ function markers_url(slug) {
   return `../data/maps/${slug}_markers.json`;
 }
 
-function atualiza_link_pokemaps() {
-  const url = pokemaps_url(jogoAtual);
-  linkPokemaps.href = url;
+function atualiza_link_externo() {
+  const ext = jogoAtual ? external_link(jogoAtual.slug) : null;
+  if (ext?.page) {
+    linkPokemaps.href = ext.page;
+    linkPokemaps.textContent = t(ext.labelKey || "maps_pokemaps");
+  } else {
+    linkPokemaps.href = pokemaps_url(jogoAtual);
+    linkPokemaps.textContent = t("maps_pokemaps");
+  }
+}
+
+function pinta_galeria() {
+  const rby = MAP_CARDS.filter((c) => c.group === "rby");
+  const rest = MAP_CARDS.filter((c) => c.group !== "rby");
+
+  const cardHtml = (c) => `
+    <button type="button" class="map-card map-card_${c.tone}" data-card="${c.id}">
+      <span class="map-card__art-wrap">
+        <img class="map-card__art" src="${asset_prefix()}${c.preview}" alt="" loading="lazy">
+      </span>
+      <span class="map-card__label">${c.label}</span>
+    </button>`;
+
+  cardsEl.innerHTML = `
+    <div class="map-cards__row map-cards__row_hero">
+      ${rby.map(cardHtml).join("")}
+    </div>
+    <h2 class="map-cards__section">${t("maps_more_games")}</h2>
+    <div class="map-cards__row map-cards__row_grid">
+      ${rest.map(cardHtml).join("")}
+    </div>`;
+
+  cardsEl.querySelectorAll("[data-card]").forEach((btn) => {
+    btn.addEventListener("click", () => abre_card(btn.dataset.card));
+  });
+}
+
+function mostra_picker() {
+  destroi_leaflet();
+  jogoAtual = null;
+  cardAtual = null;
+  versoesOverride = null;
+  pinAtivo = null;
+  areasCache = [];
+  picker.hidden = false;
+  explorer.hidden = true;
+  document.body.classList.remove("maps-exploring");
+}
+
+async function abre_card(cardId) {
+  const card = map_card_by_id(cardId);
+  if (!card) return;
+  const jogo = jogo_por_slug(card.slug);
+  if (!jogo) return;
+
+  cardAtual = card;
+  jogoAtual = jogo;
+  versoesOverride = card.versions || null;
+  pinAtivo = null;
+
+  picker.hidden = true;
+  explorer.hidden = false;
+  document.body.classList.add("maps-exploring");
+  explorerTitle.textContent = card.label;
+  atualiza_link_externo();
+  if (hintEl) hintEl.textContent = t("maps_click_hint");
+
+  await carrega_regiao();
 }
 
 function pinta_lista_areas(filtro = "") {
@@ -91,12 +163,8 @@ function destroi_leaflet() {
   mapStage.classList.remove("map-stage-inner_leaflet");
 }
 
-function usa_leaflet() {
-  return Boolean(jogoAtual && leafletPack?.markers?.length && leafletPack?.tiles);
-}
-
 async function carrega_pack(slug) {
-  if (packCache[slug]) return packCache[slug];
+  if (packCache[slug] !== undefined) return packCache[slug];
   try {
     const res = await fetch(markers_url(slug));
     if (!res.ok) {
@@ -152,7 +220,6 @@ function monta_mapa_leaflet() {
   mapStage.classList.add("map-stage-inner_leaflet");
   mapStage.innerHTML = `<div id="map-leaflet" class="map-leaflet" role="application" aria-label="Game map"></div>`;
 
-  // CRS.Simple + imageOverlay: lat grows downward (y from top of PNG), lng = x
   const minZ = pack.minZoom ?? -3;
   const maxZ = pack.maxZoom ?? 2;
 
@@ -165,10 +232,7 @@ function monta_mapa_leaflet() {
     attributionControl: true,
   });
 
-  const southWest = L.latLng(h, 0);
-  const northEast = L.latLng(0, w);
-  const bounds = L.latLngBounds(southWest, northEast);
-
+  const bounds = L.latLngBounds(L.latLng(h, 0), L.latLng(0, w));
   L.imageOverlay(imgUrl, bounds, {
     opacity: 1,
     interactive: false,
@@ -186,9 +250,7 @@ function monta_mapa_leaflet() {
     });
 
   for (const pin of pack.markers) {
-    // image pixels from top-left → LatLng(y, x)
-    const latlng = L.latLng(pin.y, pin.x);
-    const marker = L.marker(latlng, {
+    const marker = L.marker(L.latLng(pin.y, pin.x), {
       icon: icon(),
       title: pin.label,
       keyboard: true,
@@ -204,7 +266,6 @@ function monta_mapa_leaflet() {
 
 function monta_mapa_overview() {
   destroi_leaflet();
-
   if (!jogoAtual) {
     mapStage.innerHTML = `<p class="map-empty muted">${t("maps_empty")}</p>`;
     return;
@@ -212,7 +273,6 @@ function monta_mapa_overview() {
 
   mapaMeta = mapa_da_regiao(jogoAtual.region);
   const img = mapaMeta?.image ? `${asset_prefix()}${mapaMeta.image}` : null;
-
   if (!img) {
     mapStage.innerHTML = `
       <div class="region-banner map-fallback">${jogoAtual.name}<br><span class="muted">${t("maps_no_art")}</span></div>`;
@@ -244,7 +304,7 @@ function monta_mapa_overview() {
 async function monta_mapa_visual() {
   if (jogoAtual?.slug) {
     const pack = await carrega_pack(jogoAtual.slug);
-    if (pack?.markers?.length && pack?.tiles) {
+    if (pack?.markers?.length && pack?.image && pack?.imageWidth && pack?.imageHeight) {
       leafletPack = pack;
       monta_mapa_leaflet();
       return;
@@ -280,22 +340,24 @@ function seleciona_pin(pin, btn) {
   }
 }
 
-async function carrega_regiao(slugJogo) {
-  const jogo = jogo_por_slug(slugJogo);
-  if (!jogo) return;
-  jogoAtual = jogo;
+function versoes_ativas() {
+  if (versoesOverride?.length) return new Set(versoesOverride);
+  return new Set(jogoAtual?.versions || []);
+}
+
+async function carrega_regiao() {
+  if (!jogoAtual) return;
   pinAtivo = null;
-  atualiza_link_pokemaps();
   await monta_mapa_visual();
 
-  painelTitulo.textContent = jogo.name;
+  painelTitulo.textContent = cardAtual?.label || jogoAtual.name;
   painelSub.textContent = t("maps_loading_n");
   areasUl.innerHTML = `<li class="muted">${t("maps_loading_n")}</li>`;
   encontros.textContent = t("maps_click_hint");
   areasCache = [];
   if (buscaArea) buscaArea.value = "";
 
-  const reg = await pega_regiao(jogo.region);
+  const reg = await pega_regiao(jogoAtual.region);
   const locs = reg.locations || [];
 
   const BATCH = 8;
@@ -318,9 +380,8 @@ async function carrega_regiao(slugJogo) {
     areasCache.sort((a, b) => a.label.localeCompare(b.label));
     painelSub.textContent = `${areasCache.length} ${t("maps_areas").toLowerCase()}`;
 
-    if (leafletMap) {
-      atualiza_leaflet_pin_ready();
-    } else if (mapaMeta?.pins) {
+    if (leafletMap) atualiza_leaflet_pin_ready();
+    else if (mapaMeta?.pins) {
       mapStage.querySelectorAll(".map-pin").forEach((btn) => {
         const pin = mapaMeta.pins.find((p) => p.id === btn.dataset.pin);
         if (!pin) return;
@@ -343,14 +404,12 @@ async function mostra_area(areaName, btn) {
   areasUl.querySelectorAll("button").forEach((b) => b.classList.remove("on"));
   btn?.classList.add("on");
   const area = areasCache.find((a) => a.name === areaName);
-  if (area) {
-    painelTitulo.textContent = area.label;
-  }
+  if (area) painelTitulo.textContent = area.label;
   encontros.innerHTML = `<p class="muted">${t("loading")}</p>`;
   try {
     const data = await pega_location_area(areaName);
     let mons = data.pokemon_encounters || [];
-    const versoes = new Set(jogoAtual?.versions || []);
+    const versoes = versoes_ativas();
     const soVersao = chkVersao?.checked && versoes.size;
 
     if (soVersao) {
@@ -407,25 +466,7 @@ async function mostra_area(areaName, btn) {
   }
 }
 
-sel.addEventListener("change", async () => {
-  if (!sel.value) {
-    jogoAtual = null;
-    pinAtivo = null;
-    atualiza_link_pokemaps();
-    await monta_mapa_visual();
-    painelTitulo.textContent = t("maps_panel_title");
-    painelSub.textContent = t("maps_click_hint");
-    areasUl.innerHTML = "";
-    encontros.textContent = t("maps_empty");
-    return;
-  }
-  try {
-    await carrega_regiao(sel.value);
-  } catch (err) {
-    console.error(err);
-    areasUl.innerHTML = `<li class="muted">${t("err_load")}</li>`;
-  }
-});
+btnVoltar?.addEventListener("click", () => mostra_picker());
 
 buscaArea?.addEventListener("input", () => {
   if (buscaArea.value.trim()) {
@@ -441,4 +482,5 @@ chkVersao?.addEventListener("change", () => {
   if (on) mostra_area(on.dataset.name, on);
 });
 
-atualiza_link_pokemaps();
+pinta_galeria();
+mostra_picker();

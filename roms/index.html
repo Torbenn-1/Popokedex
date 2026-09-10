@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>ROMs — Popokedex</title>
+  <title>Saves & ROMs — Popokedex</title>
   <script>
     (() => {
       const v = localStorage.getItem("popo_theme");
@@ -17,13 +17,85 @@
   <script type="module" src="../js/pages/roms.js"></script>
 </head>
 <body>
-  <div class="wrap">
+  <div class="wrap wrap_roms">
     <header data-shell-header></header>
-    <section class="hero">
-      <h1 data-i18n="card_roms_title"></h1>
-      <p data-i18n="roms_soon"></p>
-      <p class="muted" data-i18n="roms_note"></p>
-    </section>
+
+    <div class="roms-top">
+      <div>
+        <h1 class="builder-title" data-i18n="roms_page_title"></h1>
+        <p class="muted builder-lead" data-i18n="roms_page_lead"></p>
+      </div>
+      <div class="roms-mode">
+        <button type="button" class="roms-tab roms-tab_on" data-mode="saves" data-i18n="roms_tab_saves"></button>
+        <button type="button" class="roms-tab" data-mode="roms" data-i18n="roms_tab_roms"></button>
+      </div>
+    </div>
+
+    <div id="roms-empty" class="roms-empty panel">
+      <label class="roms-drop roms-drop_lg" id="drop-main">
+        <input type="file" id="file-main" hidden>
+        <span class="roms-drop__kicker" data-i18n="roms_workspace"></span>
+        <span class="roms-drop__txt" data-i18n="roms_drop_cta"></span>
+        <span class="muted roms-drop__hint" id="drop-hint" data-i18n="roms_save_accept"></span>
+      </label>
+      <div class="roms-caps">
+        <article class="roms-cap">
+          <h3 data-i18n="roms_cap_g1"></h3>
+          <p class="muted" data-i18n="roms_cap_g1_body"></p>
+        </article>
+        <article class="roms-cap">
+          <h3 data-i18n="roms_cap_g2"></h3>
+          <p class="muted" data-i18n="roms_cap_g2_body"></p>
+        </article>
+        <article class="roms-cap">
+          <h3 data-i18n="roms_cap_g3"></h3>
+          <p class="muted" data-i18n="roms_cap_g3_body"></p>
+        </article>
+        <article class="roms-cap">
+          <h3 data-i18n="roms_cap_g4"></h3>
+          <p class="muted" data-i18n="roms_cap_g4_body"></p>
+        </article>
+        <article class="roms-cap">
+          <h3 data-i18n="roms_cap_g5"></h3>
+          <p class="muted" data-i18n="roms_cap_g5_body"></p>
+        </article>
+        <article class="roms-cap">
+          <h3 data-i18n="roms_cap_rom"></h3>
+          <p class="muted" data-i18n="roms_cap_rom_body"></p>
+        </article>
+      </div>
+    </div>
+
+    <div id="roms-work" class="roms-work hidden" hidden>
+      <div class="roms-filebar panel">
+        <div class="roms-filebar__main">
+          <div>
+            <p class="roms-filebar__name" id="file-name"></p>
+            <p class="muted roms-filebar__sub" id="file-sub"></p>
+          </div>
+          <div class="roms-filebar__chips" id="file-chips"></div>
+        </div>
+        <div class="roms-filebar__actions">
+          <button type="button" class="btn btn_ghost" id="btn-reopen" data-i18n="roms_reopen"></button>
+          <button type="button" class="btn btn_ghost" id="btn-download" data-i18n="roms_download"></button>
+          <button type="button" class="btn btn_ghost" id="btn-close" data-i18n="roms_close_file"></button>
+        </div>
+      </div>
+
+      <div class="roms-subtabs" role="tablist">
+        <button type="button" class="roms-subtab roms-subtab_on" data-view="overview" data-i18n="roms_view_overview"></button>
+        <button type="button" class="roms-subtab" data-view="party" data-i18n="roms_view_party"></button>
+        <button type="button" class="roms-subtab" data-view="boxes" data-i18n="roms_view_boxes"></button>
+        <button type="button" class="roms-subtab" data-view="hex" data-i18n="roms_view_hex"></button>
+        <button type="button" class="roms-subtab" data-view="tools" data-i18n="roms_view_tools"></button>
+      </div>
+
+      <div id="view-overview" class="roms-view"></div>
+      <div id="view-party" class="roms-view hidden" hidden></div>
+      <div id="view-boxes" class="roms-view hidden" hidden></div>
+      <div id="view-hex" class="roms-view hidden" hidden></div>
+      <div id="view-tools" class="roms-view hidden" hidden></div>
+    </div>
   </div>
   <footer data-shell-footer></footer>
 </body>

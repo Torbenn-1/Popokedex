@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Detalhes do time — Popokedex</title>
+  <script>
+    (() => {
+      const v = localStorage.getItem("popo_theme");
+      const dark =
+        v === "dark" ||
+        (v !== "light" && matchMedia("(prefers-color-scheme: dark)").matches);
+      document.documentElement.dataset.theme = dark ? "dark" : "light";
+    })();
+  </script>
+  <link rel="stylesheet" href="../../css/app.css">
+  <script type="module" src="../../js/pages/plan_details.js"></script>
+</head>
+<body>
+  <div class="wrap wrap_plan">
+    <header data-shell-header></header>
+    <div class="details-page-head">
+      <a class="btn btn_ghost" href="../" data-i18n="details_back">← Times</a>
+      <h1 class="hero" style="padding:0.5rem 0 0"><span data-i18n="details_page_title"></span></h1>
+      <p class="muted" id="details-game"></p>
+      <p class="muted" data-i18n="details_page_lead"></p>
+    </div>
+    <div id="details-empty" class="panel muted hidden" data-i18n="details_need_team"></div>
+    <div id="details-grid" class="details-team-grid"></div>
+    <div id="drawer-bg" class="drawer-bg"></div>
+    <aside id="drawer" class="drawer"></aside>
+  </div>
+  <footer data-shell-footer></footer>
+</body>
+</html>

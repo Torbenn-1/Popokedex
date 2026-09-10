@@ -7,5 +7,9 @@ Interactive overworld maps (assets/maps/{rby,gsc,frlg,rse}/):
   - Remake aliases: hgss → gsc tiles; oras → rse tiles.
   - Pokémon © Nintendo / Creatures / Game Freak. Fan maps for reference only.
 
+Overview Leaflet packs (Gen4+): scripts/build_overview_packs.py from CC0 region PNGs
+  + pins in data/mapa_pins.js → data/maps/{dppt,bdsp,bw,…}_markers.json.
+  Galar/SWSH still lack CC0 overview art.
+
 PokéMaps.net and MapGenie are UX references only — do not copy their tiles,
 APIs, or marker databases. Link out; never hotlink or scrape.

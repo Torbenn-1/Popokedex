@@ -1,0 +1,193 @@
+{
+  "game": "bdsp",
+  "region": "sinnoh",
+  "mode": "overview",
+  "image": "assets/maps/sinnoh.png",
+  "imageWidth": 1358,
+  "imageHeight": 1056,
+  "minZoom": -2,
+  "maxZoom": 2,
+  "markers": [
+    {
+      "id": "twinleaf",
+      "label": "Twinleaf Town",
+      "match": [
+        "twinleaf"
+      ],
+      "x": 298.76,
+      "y": 865.92,
+      "map": "twinleaf"
+    },
+    {
+      "id": "sandgem",
+      "label": "Sandgem Town",
+      "match": [
+        "sandgem"
+      ],
+      "x": 434.56,
+      "y": 823.68,
+      "map": "sandgem"
+    },
+    {
+      "id": "jubilife",
+      "label": "Jubilife City",
+      "match": [
+        "jubilife"
+      ],
+      "x": 380.24,
+      "y": 612.48,
+      "map": "jubilife"
+    },
+    {
+      "id": "oreburgh",
+      "label": "Oreburgh City",
+      "match": [
+        "oreburgh"
+      ],
+      "x": 570.36,
+      "y": 718.08,
+      "map": "oreburgh"
+    },
+    {
+      "id": "floaroma",
+      "label": "Floaroma Town",
+      "match": [
+        "floaroma"
+      ],
+      "x": 380.24,
+      "y": 443.52,
+      "map": "floaroma"
+    },
+    {
+      "id": "eterna",
+      "label": "Eterna City",
+      "match": [
+        "eterna-city"
+      ],
+      "x": 570.36,
+      "y": 401.28,
+      "map": "eterna"
+    },
+    {
+      "id": "hearthome",
+      "label": "Hearthome City",
+      "match": [
+        "hearthome"
+      ],
+      "x": 746.9,
+      "y": 549.12,
+      "map": "hearthome"
+    },
+    {
+      "id": "solaceon",
+      "label": "Solaceon Town",
+      "match": [
+        "solaceon"
+      ],
+      "x": 923.44,
+      "y": 506.88,
+      "map": "solaceon"
+    },
+    {
+      "id": "veilstone",
+      "label": "Veilstone City",
+      "match": [
+        "veilstone"
+      ],
+      "x": 1113.56,
+      "y": 443.52,
+      "map": "veilstone"
+    },
+    {
+      "id": "pastoria",
+      "label": "Pastoria City",
+      "match": [
+        "pastoria"
+      ],
+      "x": 923.44,
+      "y": 760.32,
+      "map": "pastoria"
+    },
+    {
+      "id": "celestic",
+      "label": "Celestic Town",
+      "match": [
+        "celestic"
+      ],
+      "x": 746.9,
+      "y": 337.92,
+      "map": "celestic"
+    },
+    {
+      "id": "canalave",
+      "label": "Canalave City",
+      "match": [
+        "canalave"
+      ],
+      "x": 162.96,
+      "y": 549.12,
+      "map": "canalave"
+    },
+    {
+      "id": "snowpoint",
+      "label": "Snowpoint City",
+      "match": [
+        "snowpoint"
+      ],
+      "x": 746.9,
+      "y": 126.72,
+      "map": "snowpoint"
+    },
+    {
+      "id": "sunyshore",
+      "label": "Sunyshore City",
+      "match": [
+        "sunyshore"
+      ],
+      "x": 1249.36,
+      "y": 718.08,
+      "map": "sunyshore"
+    },
+    {
+      "id": "mt-coronet",
+      "label": "Mt. Coronet",
+      "match": [
+        "mt-coronet"
+      ],
+      "x": 651.84,
+      "y": 443.52,
+      "map": "mt-coronet"
+    },
+    {
+      "id": "lake-verity",
+      "label": "Lake Verity",
+      "match": [
+        "verity"
+      ],
+      "x": 244.44,
+      "y": 760.32,
+      "map": "lake-verity"
+    },
+    {
+      "id": "lake-valor",
+      "label": "Lake Valor",
+      "match": [
+        "valor"
+      ],
+      "x": 977.76,
+      "y": 654.72,
+      "map": "lake-valor"
+    },
+    {
+      "id": "lake-acuity",
+      "label": "Lake Acuity",
+      "match": [
+        "acuity"
+      ],
+      "x": 651.84,
+      "y": 126.72,
+      "map": "lake-acuity"
+    }
+  ],
+  "aliasOf": "overview_sinnoh"
+}
