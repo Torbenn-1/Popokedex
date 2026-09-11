@@ -9,6 +9,8 @@ import {
   nome_da_dex,
   mapa_ordem_dex,
   cap_nacional_do_jogo,
+  rotulo_jogo,
+  rotulo_tipo,
 } from "../../data/jogos.js";
 import { abre_ficha, cell_html, row_html, list_header_html } from "../cuzin_dex.js";
 import { capitalize } from "../boot.js";
@@ -63,11 +65,11 @@ function sync_toggles() {
 
 filtroTipo.innerHTML =
   `<option value="">${t("filter_all")}</option>` +
-  TIPOS.map((tp) => `<option value="${tp}">${capitalize(tp)}</option>`).join("");
+  TIPOS.map((tp) => `<option value="${tp}">${rotulo_tipo(tp)}</option>`).join("");
 
 filtroJogo.innerHTML =
   `<option value="">${t("filter_all")}</option>` +
-  JOGOS.map((j) => `<option value="${j.slug}">${j.name}</option>`).join("");
+  JOGOS.map((j) => `<option value="${j.slug}">${rotulo_jogo(j)}</option>`).join("");
 
 function national_on() {
   return !!(filtroNational && filtroNational.checked);
@@ -77,24 +79,34 @@ function sync_filtro_dex({ reset = false } = {}) {
   const jogo = filtroJogo.value;
   const regionais = jogo ? dexes_regionais_do_jogo(jogo) : [];
 
-  wrapNational.hidden = !jogo;
-  if (!jogo) {
-    filtroNational.checked = false;
+  if (wrapNational) {
+    wrapNational.hidden = !jogo;
+    if (!jogo && filtroNational) filtroNational.checked = false;
   }
 
-  if (!jogo || national_on() || regionais.length <= 1) {
-    wrapFiltroDex.hidden = true;
-    if (!jogo || national_on()) {
+  const showDex = !!(jogo && !national_on() && regionais.length > 1);
+  if (wrapFiltroDex) wrapFiltroDex.hidden = !showDex;
+
+  if (!jogo || national_on()) {
+    if (filtroDex) {
       filtroDex.innerHTML = "";
       filtroDex.value = "";
-    } else if (regionais.length === 1) {
-      filtroDex.innerHTML = `<option value="${regionais[0].slug}">${nome_da_dex(regionais[0])}</option>`;
-      filtroDex.value = regionais[0].slug;
     }
     return;
   }
 
-  wrapFiltroDex.hidden = false;
+  if (regionais.length === 1) {
+    filtroDex.innerHTML = `<option value="${regionais[0].slug}">${nome_da_dex(regionais[0])}</option>`;
+    filtroDex.value = regionais[0].slug;
+    return;
+  }
+
+  if (regionais.length === 0) {
+    filtroDex.innerHTML = "";
+    filtroDex.value = "";
+    return;
+  }
+
   const prev = filtroDex.value;
   filtroDex.innerHTML =
     `<option value="__regional__">${t("filter_dex_all")}</option>` +
@@ -158,6 +170,9 @@ function filtra() {
     lista = lista.filter(
       (p) =>
         p.name.toLowerCase().includes(q) ||
+        (p.nameEn && p.nameEn.toLowerCase().includes(q)) ||
+        (p.nameJa && p.nameJa.includes(q)) ||
+        (p.nameRoma && p.nameRoma.toLowerCase().includes(q)) ||
         String(p.id) === q ||
         (ordemDex && String(ordemDex.get(p.id)) === q) ||
         p.slug.includes(q.replace(/\s+/g, "-"))

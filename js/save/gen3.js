@@ -9,6 +9,8 @@ import {
 import { decode_gen3 } from "./strings.js";
 import { national_name, national_slug } from "./national_slugs.js";
 import { shiny_from_pid } from "./shiny.js";
+import { level_from_exp } from "./experience.js";
+import { apply_unown_fields, unown_form_gen3, UNOWN_DEX } from "./unown.js";
 
 const SECTION = 0x1000;
 const SECTION_USED = 0xf80;
@@ -69,6 +71,44 @@ function detect_version(small) {
   return "rs";
 }
 
+const HOENN_BADGES = [
+  "Stone",
+  "Knuckle",
+  "Dynamo",
+  "Heat",
+  "Balance",
+  "Feather",
+  "Mind",
+  "Rain",
+];
+const KANTO_BADGES = [
+  "Boulder",
+  "Cascade",
+  "Thunder",
+  "Rainbow",
+  "Soul",
+  "Marsh",
+  "Volcano",
+  "Earth",
+];
+
+/** PKHeX LargeBlock event-flag bases + FLAG_BADGE01_GET. */
+const BADGE_FLAGS = {
+  rs: { eventFlag: 0x1220, start: 0x807, names: HOENN_BADGES },
+  e: { eventFlag: 0x1270, start: 0x867, names: HOENN_BADGES },
+  frlg: { eventFlag: 0x0ee0, start: 0x820, names: KANTO_BADGES },
+};
+
+function event_flag(large, flagBase, flagNum) {
+  const off = flagBase + (flagNum >> 3);
+  return !!(u8(large, off) & (1 << (flagNum & 7)));
+}
+
+function read_badges3(large, version) {
+  const cfg = BADGE_FLAGS[version] || BADGE_FLAGS.rs;
+  return cfg.names.filter((_, i) => event_flag(large, cfg.eventFlag, cfg.start + i));
+}
+
 function parse_pk3(raw, party) {
   const data = raw.slice();
   decrypt_if_encrypted3(data);
@@ -79,10 +119,12 @@ function parse_pk3(raw, party) {
   const pid = u32le(data, 0);
   const tid = u16le(data, 0x04);
   const sid = u16le(data, 0x06);
+  const exp = u32le(data, 0x24);
   const moves = [u16le(data, 0x2c), u16le(data, 0x2e), u16le(data, 0x30), u16le(data, 0x32)].filter(
     (m) => m > 0
   );
   const iv32 = u32le(data, 0x48);
+  const level = party ? u8(data, 0x54) || level_from_exp(exp, dexId) : level_from_exp(exp, dexId);
   const mon = {
     speciesInt: speciesInternal,
     dexId,
@@ -93,8 +135,9 @@ function parse_pk3(raw, party) {
     otId: tid,
     sid,
     pid,
+    exp,
     moves,
-    level: party ? u8(data, 0x54) : 0,
+    level,
     shiny: shiny_from_pid(pid, tid, sid),
     ivs: {
       hp: iv32 & 0x1f,
@@ -106,6 +149,7 @@ function parse_pk3(raw, party) {
     },
     boxed: !party,
   };
+  if (dexId === UNOWN_DEX) apply_unown_fields(mon, unown_form_gen3(pid));
   if (party) {
     mon.hp = u16le(data, 0x56);
     mon.maxHp = u16le(data, 0x58);
@@ -143,14 +187,22 @@ export function parse_gen3(v) {
 
   const player = decode_gen3(small, 0, 7);
   const playerId = u16le(small, 0x0a);
+  const secretId = u16le(small, 0x0c);
 
   let partyCountOff;
   let partyDataOff;
   let moneyOff;
+  let securityKey = 0;
   if (version === "frlg") {
     partyCountOff = 0x034;
     partyDataOff = 0x038;
     moneyOff = 0x290;
+    securityKey = u32le(small, 0xf20);
+  } else if (version === "e") {
+    partyCountOff = 0x234;
+    partyDataOff = 0x238;
+    moneyOff = 0x490;
+    securityKey = u32le(small, 0xac);
   } else {
     partyCountOff = 0x234;
     partyDataOff = 0x238;
@@ -176,7 +228,6 @@ export function parse_gen3(v) {
     for (let s = 0; s < 30; s++) {
       const start = boxOff + s * SIZE.G3_STORED;
       const slice = storage.subarray(start, start + SIZE.G3_STORED);
-      // empty?
       let empty = true;
       for (let k = 0; k < SIZE.G3_STORED; k++) if (slice[k]) { empty = false; break; }
       if (empty) continue;
@@ -194,13 +245,24 @@ export function parse_gen3(v) {
     });
   }
 
+  const money = (u32le(large, moneyOff) ^ securityKey) >>> 0;
+  const playtime = {
+    hours: u16le(small, 0x0e),
+    minutes: u8(small, 0x10),
+    seconds: u8(small, 0x11),
+  };
+  const badges = read_badges3(large, version);
+
   return {
     gen: 3,
     format: `gen3-${version}`,
     label: labels[version],
     player,
     playerId,
-    money: u32le(large, moneyOff) & 0xffffff,
+    sid: secretId,
+    money: money & 0xffffff,
+    badges,
+    playtime,
     partyCount: party.length,
     party,
     currentBox,

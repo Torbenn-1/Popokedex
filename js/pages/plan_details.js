@@ -20,6 +20,7 @@ import {
   STAT_SHORT,
   ivs_padrao,
 } from "../team_stats.js";
+import { bind_inject_controls } from "../team_inject.js";
 
 monta_shell({ active: "team" });
 
@@ -31,6 +32,8 @@ const empty = document.getElementById("details-empty");
 const gameLabel = document.getElementById("details-game");
 const drawer = document.getElementById("drawer");
 const drawerBg = document.getElementById("drawer-bg");
+const btnInjectSave = document.getElementById("btn-inject-save");
+const injectSaveFile = document.getElementById("inject-save-file");
 
 function load_store() {
   try {
@@ -119,8 +122,16 @@ function persist() {
   save_store(store);
 }
 
+const syncInject = bind_inject_controls({
+  btn: btnInjectSave,
+  input: injectSaveFile,
+  getTeam: () => time,
+  getGameSlug: () => game,
+});
+
 function pinta() {
   gameLabel.textContent = nome_jogo(game) || game;
+  syncInject();
   if (!time.some(Boolean)) {
     empty.classList.remove("hidden");
     grid.innerHTML = "";

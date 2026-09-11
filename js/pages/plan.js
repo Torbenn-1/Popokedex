@@ -9,6 +9,8 @@ import {
   nome_da_dex,
   cap_nacional_do_jogo,
   mapa_ordem_dex,
+  rotulo_jogo,
+  rotulo_tipo,
 } from "../../data/jogos.js";
 import { abre_ficha, cell_html } from "../cuzin_dex.js";
 import {
@@ -33,6 +35,7 @@ import {
   moves_vazios,
 } from "../team_moves.js";
 import { normaliza_ivs, normaliza_evs, ivs_default, evs_default } from "../team_stats.js";
+import { bind_inject_controls, can_inject_team, team_gen } from "../team_inject.js";
 
 monta_shell({ active: "team" });
 
@@ -53,6 +56,7 @@ const displayStatus = document.getElementById("display-status");
 const planNational = document.getElementById("plan-national");
 const planDex = document.getElementById("plan-dex");
 const wrapPlanDex = document.getElementById("wrap-plan-dex");
+const wrapPlanNational = document.getElementById("wrap-plan-national");
 
 let catalogo = [];
 /** @type {{id:number,slug:string,name:string,types:string[],shiny?:boolean,moves?:any[]}[]} */
@@ -63,6 +67,8 @@ let displayIdAtual = null;
 let teamsByGame = load_store();
 const movesHint = document.getElementById("moves-hint");
 const btnDetailsPage = document.getElementById("btn-details-page");
+const btnInjectSave = document.getElementById("btn-inject-save");
+const injectSaveFile = document.getElementById("inject-save-file");
 const analiseRoot = document.getElementById("analise");
 
 if (!document.getElementById("td-display-css")) {
@@ -73,7 +79,7 @@ if (!document.getElementById("td-display-css")) {
 }
 
 jogoSel.innerHTML = JOGOS.map(
-  (j) => `<option value="${j.slug}">${j.name}</option>`
+  (j) => `<option value="${j.slug}">${rotulo_jogo(j)}</option>`
 ).join("");
 
 const salvo = localStorage.getItem(LAST_GAME);
@@ -224,19 +230,34 @@ function sync_plan_dex({ reset = false } = {}) {
   const jogo = jogoSel.value;
   const regionais = jogo ? dexes_regionais_do_jogo(jogo) : [];
 
-  if (!jogo || national_on() || regionais.length <= 1) {
-    wrapPlanDex.hidden = true;
-    if (!jogo || national_on()) {
+  if (wrapPlanNational) {
+    wrapPlanNational.hidden = !jogo;
+    if (!jogo && planNational) planNational.checked = false;
+  }
+
+  const showDex = !!(jogo && !national_on() && regionais.length > 1);
+  if (wrapPlanDex) wrapPlanDex.hidden = !showDex;
+
+  if (!jogo || national_on()) {
+    if (planDex) {
       planDex.innerHTML = "";
       planDex.value = "";
-    } else if (regionais.length === 1) {
-      planDex.innerHTML = `<option value="${regionais[0].slug}">${nome_da_dex(regionais[0])}</option>`;
-      planDex.value = regionais[0].slug;
     }
     return;
   }
 
-  wrapPlanDex.hidden = false;
+  if (regionais.length === 1) {
+    planDex.innerHTML = `<option value="${regionais[0].slug}">${nome_da_dex(regionais[0])}</option>`;
+    planDex.value = regionais[0].slug;
+    return;
+  }
+
+  if (regionais.length === 0) {
+    planDex.innerHTML = "";
+    planDex.value = "";
+    return;
+  }
+
   const prev = planDex.value;
   planDex.innerHTML =
     `<option value="__regional__">${t("filter_dex_all")}</option>` +
@@ -408,6 +429,15 @@ function pinta_slots() {
     btnDetailsPage.href = `details/?game=${encodeURIComponent(jogoSel.value)}`;
     btnDetailsPage.classList.toggle("btn_disabled", !time.some(Boolean));
   }
+  if (btnInjectSave) {
+    const can = can_inject_team(jogoSel.value, time);
+    btnInjectSave.disabled = false;
+    btnInjectSave.classList.toggle("btn_disabled", !can);
+    btnInjectSave.setAttribute("aria-disabled", can ? "false" : "true");
+    const gen = team_gen(jogoSel.value);
+    btnInjectSave.title =
+      gen > 5 ? t("inject_need_gen") : !time.some(Boolean) ? t("inject_need_team") : "";
+  }
 
   slotsEl.innerHTML = time
     .map((p, i) => {
@@ -427,7 +457,7 @@ function pinta_slots() {
         </div>
         <img class="slot__art" src="${art.src}" alt="" onerror="${art.onerror}">
         <div class="slot__name">${p.name}</div>
-        <div class="slot__types">${(p.types || []).map((tp) => `<span class="type-pill" data-type="${tp}" style="background:var(--type-${tp})">${tp}</span>`).join("")}</div>
+        <div class="slot__types">${(p.types || []).map((tp) => `<span class="type-pill" data-type="${tp}" style="background:var(--type-${tp})">${rotulo_tipo(tp)}</span>`).join("")}</div>
       </div>`;
     })
     .join("");
@@ -541,6 +571,13 @@ document.getElementById("btn-clear").addEventListener("click", () => {
   pinta_display();
 });
 
+bind_inject_controls({
+  btn: btnInjectSave,
+  input: injectSaveFile,
+  getTeam: () => time,
+  getGameSlug: () => jogoSel.value,
+});
+
 document.getElementById("btn-copy").addEventListener("click", async () => {
   update_hash();
   try {
@@ -643,13 +680,15 @@ function pinta_grade() {
     lista = lista.filter(
       (p) =>
         p.name.toLowerCase().includes(q) ||
+        (p.nameEn && p.nameEn.toLowerCase().includes(q)) ||
+        (p.nameJa && p.nameJa.includes(q)) ||
+        (p.nameRoma && p.nameRoma.toLowerCase().includes(q)) ||
         String(p.id) === q ||
         (ordem && String(ordem.get(p.id)) === q) ||
         p.slug.includes(q)
     );
   }
   grade.innerHTML = lista
-    .slice(0, 300)
     .map((p) =>
       cell_html(p.id, p.name, {
         types: p.types || [],
@@ -661,7 +700,7 @@ function pinta_grade() {
   const extra = national_on()
     ? ` · Nat. #${cap_nacional_do_jogo(jogoSel.value)}`
     : "";
-  status.textContent = `${t("pool_for_game")}: ${Math.min(lista.length, 300)}/${total}${extra}`;
+  status.textContent = `${t("pool_for_game")}: ${lista.length}/${total}${extra}`;
   grade.querySelectorAll(".poke-card").forEach((btn) => {
     btn.addEventListener("click", async () => {
       const id = btn.dataset.id;

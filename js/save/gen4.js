@@ -10,10 +10,48 @@ import {
 import { decode_gen4 } from "./strings.js";
 import { national_name, national_slug } from "./national_slugs.js";
 import { shiny_from_pid } from "./shiny.js";
+import { level_from_exp } from "./experience.js";
+import { apply_unown_fields, UNOWN_DEX } from "./unown.js";
 
 const PARTITION = 0x40000;
 const MAGIC_INTL = 0x20060623;
 const MAGIC_KOR = 0x20070903;
+
+const SINNOH_BADGES = [
+  "Coal",
+  "Forest",
+  "Cobble",
+  "Fen",
+  "Relic",
+  "Mine",
+  "Icicle",
+  "Beacon",
+];
+const JOHTO_BADGES = [
+  "Zephyr",
+  "Hive",
+  "Plain",
+  "Fog",
+  "Storm",
+  "Mineral",
+  "Glacier",
+  "Rising",
+];
+const KANTO_BADGES = [
+  "Boulder",
+  "Cascade",
+  "Thunder",
+  "Rainbow",
+  "Soul",
+  "Marsh",
+  "Volcano",
+  "Earth",
+];
+
+/** Relative to trainer1: badges +0x1a, playtime +0x22 (u16 hours). HGSS Kanto +0x1f. */
+const TRAINER_BADGES = 0x1a;
+const TRAINER_KANTO = 0x1f;
+const TRAINER_HOURS = 0x22;
 
 const VARIANTS = {
   dp: {
@@ -101,10 +139,14 @@ function parse_pk45(raw, party) {
   const pid = u32le(data, 0);
   const tid = u16le(data, 0x0c);
   const sid = u16le(data, 0x0e);
+  const exp = u32le(data, 0x10);
   const moves = [u16le(data, 0x28), u16le(data, 0x2a), u16le(data, 0x2c), u16le(data, 0x2e)].filter(
     (m) => m > 0
   );
   const iv32 = u32le(data, 0x38);
+  const partyLv = party ? data[0x8c] : 0;
+  const level = partyLv || level_from_exp(exp, dexId);
+  const form = (data[0x40] >> 3) & 0x1f;
   const mon = {
     speciesInt: dexId,
     dexId,
@@ -115,8 +157,10 @@ function parse_pk45(raw, party) {
     otId: tid,
     sid,
     pid,
+    exp,
+    form,
     moves,
-    level: party ? data[0x8c] : 0,
+    level,
     shiny: shiny_from_pid(pid, tid, sid),
     ivs: {
       hp: iv32 & 0x1f,
@@ -128,6 +172,7 @@ function parse_pk45(raw, party) {
     },
     boxed: !party,
   };
+  if (dexId === UNOWN_DEX) apply_unown_fields(mon, form);
   if (party) {
     mon.hp = u16le(data, 0x8e);
     mon.maxHp = u16le(data, 0x90);
@@ -168,7 +213,30 @@ export function parse_gen4(v) {
 
   const player = decode_gen4(general, variant.trainer1, 14); // 7 chars max
   const playerId = u16le(general, variant.trainer1 + 0x10);
+  const sid = u16le(general, variant.trainer1 + 0x12);
   const money = u32le(general, variant.trainer1 + 0x14) >>> 0;
+  const badgesByte = general[variant.trainer1 + TRAINER_BADGES] ?? 0;
+  const playtime = {
+    hours: u16le(general, variant.trainer1 + TRAINER_HOURS),
+    minutes: general[variant.trainer1 + TRAINER_HOURS + 2] ?? 0,
+    seconds: general[variant.trainer1 + TRAINER_HOURS + 3] ?? 0,
+  };
+
+  let badges;
+  let badgesJohto;
+  let badgesKanto;
+  let badgesJohtoNames;
+  let badgesKantoNames;
+  if (variant.format === "gen4-hgss") {
+    const kantoByte = general[variant.trainer1 + TRAINER_KANTO] ?? 0;
+    badgesJohtoNames = JOHTO_BADGES.filter((_, i) => badgesByte & (1 << i));
+    badgesKantoNames = KANTO_BADGES.filter((_, i) => kantoByte & (1 << i));
+    badgesJohto = badgesJohtoNames.length;
+    badgesKanto = badgesKantoNames.length;
+  } else {
+    badges = SINNOH_BADGES.filter((_, i) => badgesByte & (1 << i));
+  }
+
   const rawCount = general[variant.party - 4] ?? 0;
   const partyCount = rawCount <= 6 ? rawCount : 0;
 
@@ -218,7 +286,17 @@ export function parse_gen4(v) {
     label: variant.label,
     player,
     playerId,
+    sid,
     money,
+    playtime,
+    ...(badges
+      ? { badges }
+      : {
+          badgesJohto,
+          badgesKanto,
+          badgesJohtoNames,
+          badgesKantoNames,
+        }),
     partyCount: party.length,
     party,
     currentBox: 0,

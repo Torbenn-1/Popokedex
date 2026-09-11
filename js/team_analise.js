@@ -1,6 +1,6 @@
 /** Análise visual do time — defesa + cobertura por golpes. */
 
-import { TIPOS, mult_ataque } from "../data/jogos.js";
+import { TIPOS, mult_ataque, rotulo_tipo } from "../data/jogos.js";
 import { t } from "./i18n.js";
 
 function tipos_ofensivos(mon) {
@@ -45,7 +45,7 @@ function bar_row({ label, type, value, max, tone }) {
   const pct = max ? Math.round((value / max) * 100) : 0;
   return `<div class="ana-bar" data-type="${type || ""}">
     <div class="ana-bar__label">
-      <span class="type-pill ana-bar__pill" style="background:var(--type-${type || "normal"})">${label}</span>
+      <span class="type-pill ana-bar__pill" style="background:var(--type-${type || "normal"})">${rotulo_tipo(label || type)}</span>
       <strong>${value}</strong>
     </div>
     <div class="ana-bar__track">
@@ -108,7 +108,7 @@ function chips_resumo(items, tone) {
   return items
     .map(
       (tp) =>
-        `<span class="type-pill ana-chip ana-chip_${tone}" style="background:var(--type-${tp})">${tp}</span>`
+        `<span class="type-pill ana-chip ana-chip_${tone}" style="background:var(--type-${tp})">${rotulo_tipo(tp)}</span>`
     )
     .join("");
 }
@@ -153,11 +153,11 @@ export function pinta_analise_Rica(root, time) {
   const maxMove = Math.max(1, ...moveEntries.map(([, n]) => n));
 
   const radarCov = covScores.map((c) => ({
-    label: c.type.slice(0, 3),
+    label: rotulo_tipo(c.type),
     value: c.superHits,
   }));
   const radarDef = defScores.map((d) => ({
-    label: d.type.slice(0, 3),
+    label: rotulo_tipo(d.type),
     value: d.resist + d.immune,
   }));
 

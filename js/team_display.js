@@ -1,6 +1,6 @@
 /** Display de time por jogo — preview, HTML autônomo e galeria. */
 
-import { JOGOS, jogo_por_slug } from "../../data/jogos.js";
+import { JOGOS, jogo_por_slug, rotulo_jogo, rotulo_tipo } from "../../data/jogos.js";
 import { CREATOR_DISPLAYS } from "../../data/creator_displays.js";
 import { art3d_url, artwork_url, sprite_url } from "./buceta_api.js";
 import { sprite_mode } from "./sprite_mode.js";
@@ -122,7 +122,7 @@ export function tema_do_jogo(gameSlug) {
 }
 
 export function nome_jogo(gameSlug) {
-  return jogo_por_slug(gameSlug)?.name || gameSlug;
+  return rotulo_jogo(gameSlug) || gameSlug;
 }
 
 function art_url(id, mode, shiny = false) {
@@ -182,7 +182,7 @@ function type_pills(types) {
   return (types || [])
     .map(
       (tp) =>
-        `<span class="td-type" data-type="${esc(tp)}">${esc(tp)}</span>`
+        `<span class="td-type" data-type="${esc(tp)}">${esc(rotulo_tipo(tp))}</span>`
     )
     .join("");
 }

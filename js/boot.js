@@ -1,4 +1,4 @@
-import { t, cuzin_lang, set_cuzin_lang } from "./i18n.js";
+import { t, cuzin_lang, set_cuzin_lang, next_lang, html_lang_tag } from "./i18n.js";
 import { theme_mode, toggle_theme } from "./theme.js";
 
 function path_prefix() {
@@ -22,7 +22,7 @@ export function monta_shell({ active } = {}) {
     { id: "roms", href: `${pre}roms/`, key: "nav_roms" },
   ];
 
-  document.documentElement.lang = cuzin_lang() === "pt" ? "pt-BR" : "en";
+  document.documentElement.lang = html_lang_tag();
 
   const dark = theme_mode() === "dark";
   const header = document.querySelector("[data-shell-header]");
@@ -46,7 +46,7 @@ export function monta_shell({ active } = {}) {
           <button type="button" class="icon-btn" data-theme-toggle title="${t("theme_toggle")}" aria-label="${t("theme_toggle")}">
             ${dark ? "☀" : "☾"}
           </button>
-          <button type="button" class="lang-btn" data-lang-toggle>${t("lang_toggle")}</button>
+          <button type="button" class="lang-btn" data-lang-toggle title="${next_lang().toUpperCase()}" aria-label="${next_lang().toUpperCase()}">${t("lang_toggle")}</button>
         </div>
       </div>
     `;
@@ -112,7 +112,7 @@ export function monta_shell({ active } = {}) {
   const btn = document.querySelector("[data-lang-toggle]");
   if (btn) {
     btn.addEventListener("click", () => {
-      set_cuzin_lang(cuzin_lang() === "pt" ? "en" : "pt");
+      set_cuzin_lang(next_lang());
       location.reload();
     });
   }

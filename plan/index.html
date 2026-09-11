@@ -16,7 +16,7 @@
   <link rel="stylesheet" href="../css/app.css">
   <script type="module" src="../js/pages/plan.js"></script>
 </head>
-<body>
+<body class="page-plan">
   <div class="wrap wrap_plan">
     <header data-shell-header></header>
 
@@ -31,23 +31,65 @@
       </label>
     </div>
 
-    <section class="builder-squad panel" aria-labelledby="squad-heading">
-      <div class="builder-squad__head">
-        <h2 id="squad-heading" class="section-title" data-i18n="your_team"></h2>
-        <p id="moves-hint" class="muted moves-hint"></p>
-        <div class="builder-actions">
-          <a class="btn" id="btn-details-page" href="details/" data-i18n="details_page_link"></a>
-          <button type="button" class="btn btn_ghost" id="btn-analise" data-i18n="show_analysis"></button>
-          <button type="button" class="btn btn_ghost" id="btn-copy" data-i18n="copy_link"></button>
-          <button type="button" class="btn btn_ghost" id="btn-rand" data-i18n="randomize"></button>
-          <button type="button" class="btn btn_ghost" id="btn-clear" data-i18n="clear_team"></button>
-        </div>
-      </div>
-      <div id="slots" class="team-slots team-slots_builder"></div>
-      <div id="analise" class="analise-panel hidden"></div>
-    </section>
+    <div class="plan-layout">
+      <div class="plan-layout__main">
+        <section class="builder-squad panel" aria-labelledby="squad-heading">
+          <div class="builder-squad__head">
+            <div>
+              <h2 id="squad-heading" class="section-title" data-i18n="your_team"></h2>
+              <p id="moves-hint" class="muted moves-hint"></p>
+            </div>
+            <div class="builder-actions">
+              <a class="btn" id="btn-details-page" href="details/" data-i18n="details_page_link"></a>
+              <button type="button" class="btn" id="btn-inject-save" data-i18n="inject_save"></button>
+              <input type="file" id="inject-save-file" class="hidden" accept=".sav,.dsv,application/octet-stream" hidden>
+              <button type="button" class="btn btn_ghost" id="btn-analise" data-i18n="show_analysis"></button>
+              <button type="button" class="btn btn_ghost" id="btn-copy" data-i18n="copy_link"></button>
+              <button type="button" class="btn btn_ghost" id="btn-rand" data-i18n="randomize"></button>
+              <button type="button" class="btn btn_ghost" id="btn-clear" data-i18n="clear_team"></button>
+            </div>
+          </div>
+          <div id="slots" class="team-slots team-slots_builder"></div>
+          <div id="analise" class="analise-panel hidden"></div>
+        </section>
 
-    <div class="builder-work">
+        <details class="builder-export panel">
+          <summary class="builder-export__sum">
+            <span data-i18n="display_title"></span>
+            <span class="muted" data-i18n="builder_export_hint"></span>
+          </summary>
+          <div class="team-display-panel">
+            <div class="team-display-panel__head">
+              <a class="btn btn_ghost" href="displays/" data-i18n="display_gallery"></a>
+            </div>
+            <p class="muted display-lead" data-i18n="display_lead"></p>
+            <div class="toolbar dex-toolbar team-display-form">
+              <label>
+                <span class="muted" data-i18n="display_name"></span>
+                <input type="text" id="display-nome" maxlength="60" autocomplete="off">
+              </label>
+              <label>
+                <span class="muted" data-i18n="display_note"></span>
+                <input type="text" id="display-nota" maxlength="120" autocomplete="off">
+              </label>
+              <label>
+                <span class="muted" data-i18n="display_sprite"></span>
+                <select id="display-sprite">
+                  <option value="3d">3D</option>
+                  <option value="2d">2D</option>
+                </select>
+              </label>
+              <button type="button" class="btn" id="btn-save-display" data-i18n="display_save"></button>
+              <button type="button" class="btn btn_ghost" id="btn-dl-display" data-i18n="display_download"></button>
+            </div>
+            <p id="display-status" class="status-line muted"></p>
+            <h3 class="section-title" data-i18n="display_stack"></h3>
+            <p class="muted" data-i18n="display_stack_lead"></p>
+            <div id="team-stack" class="team-stack"></div>
+          </div>
+        </details>
+      </div>
+
       <aside class="plan-layout__pool panel builder-pool">
         <div class="builder-pool__head">
           <h2 class="section-title" data-i18n="builder_pool"></h2>
@@ -59,7 +101,7 @@
             <span class="muted" data-i18n="filter_dex"></span>
             <select id="plan-dex"></select>
           </label>
-          <label id="wrap-plan-national" class="dex-check">
+          <label id="wrap-plan-national" class="dex-check" hidden>
             <input type="checkbox" id="plan-national">
             <span data-i18n="filter_national"></span>
           </label>
@@ -68,42 +110,6 @@
         <div id="grade" class="dex-grid dex-grid_compact plan-pool-grade"></div>
       </aside>
     </div>
-
-    <details class="builder-export panel">
-      <summary class="builder-export__sum">
-        <span data-i18n="display_title"></span>
-        <span class="muted" data-i18n="builder_export_hint"></span>
-      </summary>
-      <div class="team-display-panel">
-        <div class="team-display-panel__head">
-          <a class="btn btn_ghost" href="displays/" data-i18n="display_gallery"></a>
-        </div>
-        <p class="muted display-lead" data-i18n="display_lead"></p>
-        <div class="toolbar dex-toolbar team-display-form">
-          <label>
-            <span class="muted" data-i18n="display_name"></span>
-            <input type="text" id="display-nome" maxlength="60" autocomplete="off">
-          </label>
-          <label>
-            <span class="muted" data-i18n="display_note"></span>
-            <input type="text" id="display-nota" maxlength="120" autocomplete="off">
-          </label>
-          <label>
-            <span class="muted" data-i18n="display_sprite"></span>
-            <select id="display-sprite">
-              <option value="3d">3D</option>
-              <option value="2d">2D</option>
-            </select>
-          </label>
-          <button type="button" class="btn" id="btn-save-display" data-i18n="display_save"></button>
-          <button type="button" class="btn btn_ghost" id="btn-dl-display" data-i18n="display_download"></button>
-        </div>
-        <p id="display-status" class="status-line muted"></p>
-        <h3 class="section-title" data-i18n="display_stack"></h3>
-        <p class="muted" data-i18n="display_stack_lead"></p>
-        <div id="team-stack" class="team-stack"></div>
-      </div>
-    </details>
   </div>
   <footer data-shell-footer></footer>
 </body>

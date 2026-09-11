@@ -10,10 +10,36 @@ import {
 import { decode_gen5 } from "./strings.js";
 import { national_name, national_slug } from "./national_slugs.js";
 import { shiny_from_pid } from "./shiny.js";
+import { level_from_exp } from "./experience.js";
+import { apply_unown_fields, UNOWN_DEX } from "./unown.js";
 
 const SIZE_G5RAW = 0x80000;
 const SIZE_G5BW = 0x24000;
 const SIZE_G5B2W2 = 0x26000;
+
+const UNOVA_BADGES_BW = [
+  "Trio",
+  "Basic",
+  "Insect",
+  "Bolt",
+  "Quake",
+  "Jet",
+  "Freeze",
+  "Legend",
+];
+const UNOVA_BADGES_B2W2 = [
+  "Basic",
+  "Toxic",
+  "Insect",
+  "Bolt",
+  "Quake",
+  "Jet",
+  "Legend",
+  "Wave",
+];
+
+/** Playtime relative to trainer block: +0x24 hours (u16), +0x26 min, +0x27 sec. */
+const PLAY_HOURS = 0x24;
 
 const PROFILES = {
   bw: {
@@ -58,10 +84,14 @@ function parse_pk5(raw, party) {
   const pid = u32le(data, 0);
   const tid = u16le(data, 0x0c);
   const sid = u16le(data, 0x0e);
+  const exp = u32le(data, 0x10);
   const moves = [u16le(data, 0x28), u16le(data, 0x2a), u16le(data, 0x2c), u16le(data, 0x2e)].filter(
     (m) => m > 0
   );
   const iv32 = u32le(data, 0x38);
+  const partyLv = party ? data[0x8c] : 0;
+  const level = partyLv || level_from_exp(exp, dexId);
+  const form = (data[0x40] >> 3) & 0x1f;
   const mon = {
     speciesInt: dexId,
     dexId,
@@ -72,8 +102,10 @@ function parse_pk5(raw, party) {
     otId: tid,
     sid,
     pid,
+    exp,
+    form,
     moves,
-    level: party ? data[0x8c] : 0,
+    level,
     shiny: shiny_from_pid(pid, tid, sid),
     ivs: {
       hp: iv32 & 0x1f,
@@ -85,6 +117,7 @@ function parse_pk5(raw, party) {
     },
     boxed: !party,
   };
+  if (dexId === UNOWN_DEX) apply_unown_fields(mon, form);
   if (party) {
     mon.hp = u16le(data, 0x8e);
     mon.maxHp = u16le(data, 0x90);
@@ -156,10 +189,16 @@ export function parse_gen5(v) {
   // Trainer Data block @ 0x19400 — OT at +4 (UTF-16), TID at +0x14
   const player = decode_gen5(data, kind.trainer + 4, 16);
   const playerId = u16le(data, kind.trainer + 0x14);
+  const sid = u16le(data, kind.trainer + 0x16);
   const money = u32le(data, kind.misc) >>> 0;
   const badgesByte = data[kind.misc + 4] ?? 0;
-  const badges = [];
-  for (let i = 0; i < 8; i++) if (badgesByte & (1 << i)) badges.push(`Badge ${i + 1}`);
+  const names = kind.format === "gen5-b2w2" ? UNOVA_BADGES_B2W2 : UNOVA_BADGES_BW;
+  const badges = names.filter((_, i) => badgesByte & (1 << i));
+  const playtime = {
+    hours: u16le(data, kind.trainer + PLAY_HOURS),
+    minutes: data[kind.trainer + PLAY_HOURS + 2] ?? 0,
+    seconds: data[kind.trainer + PLAY_HOURS + 3] ?? 0,
+  };
 
   return {
     gen: 5,
@@ -167,8 +206,10 @@ export function parse_gen5(v) {
     label: kind.label,
     player,
     playerId,
+    sid,
     money,
     badges,
+    playtime,
     partyCount: party.length,
     party,
     currentBox: 0,

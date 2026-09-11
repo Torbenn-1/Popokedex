@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <meta name="description" content="Popokedex — Pokédex, mapas, times e ROMs.">
+  <meta name="description" content="Popokedex: Pokédex, mapas por jogo, montador de times e ferramentas de save e ROM.">
   <title>Popokedex</title>
   <script>
     (() => {
@@ -14,30 +14,82 @@
       document.documentElement.dataset.theme = dark ? "dark" : "light";
     })();
   </script>
-  <link rel="stylesheet" href="css/app.css">
+  <link rel="stylesheet" href="css/app.css?v=home10">
   <script type="module" src="js/pages/home.js"></script>
 </head>
 <body class="page-home">
+  <div class="home-stage" aria-hidden="true">
+    <div class="home-stage__glow home-stage__glow_a"></div>
+    <div class="home-stage__glow home-stage__glow_b"></div>
+    <div class="home-stage__grid"></div>
+  </div>
+
   <div class="wrap wrap_home">
     <header data-shell-header></header>
+
     <main class="home-main">
-      <section class="grid-cards home-cards">
-        <article class="card"><a class="stretch" href="dex/">
-          <h2 data-i18n="card_dex_title"></h2>
-          <p data-i18n="card_dex_body"></p>
-        </a></article>
-        <article class="card"><a class="stretch" href="maps/">
-          <h2 data-i18n="card_maps_title"></h2>
-          <p data-i18n="card_maps_body"></p>
-        </a></article>
-        <article class="card"><a class="stretch" href="plan/">
-          <h2 data-i18n="card_team_title"></h2>
-          <p data-i18n="card_team_body"></p>
-        </a></article>
-        <article class="card"><a class="stretch" href="roms/">
-          <h2 data-i18n="card_roms_title"></h2>
-          <p data-i18n="card_roms_body"></p>
-        </a></article>
+      <section class="home-hero">
+        <div class="home-hero__copy">
+          <p class="home-kicker" data-i18n="home_kicker"></p>
+          <h1 class="home-brand" data-i18n="brand"></h1>
+          <p class="home-tag" data-i18n="home_tag"></p>
+          <div class="home-cta">
+            <a class="btn home-cta__primary" href="dex/" data-i18n="home_cta_dex"></a>
+            <a class="btn btn_ghost home-cta__secondary" href="plan/" data-i18n="home_cta_team"></a>
+          </div>
+        </div>
+        <div class="home-hero__visual" aria-hidden="true">
+          <div class="home-orbit">
+            <img class="home-orbit__mon home-orbit__mon_a" data-cry-id="389" src="https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/home/389.png" alt="" width="160" height="160" loading="eager" decoding="async">
+            <img class="home-orbit__mon home-orbit__mon_b" data-cry-id="243" src="https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/home/243.png" alt="" width="120" height="120" loading="eager" decoding="async">
+            <img class="home-orbit__mon home-orbit__mon_c" data-cry-id="168" src="https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/home/168.png" alt="" width="100" height="100" loading="eager" decoding="async">
+            <img class="home-orbit__mon home-orbit__mon_d" data-cry-id="442" src="https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/home/442.png" alt="" width="110" height="110" loading="eager" decoding="async">
+            <img class="home-orbit__mon home-orbit__mon_e" data-cry-id="375" src="https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/home/375.png" alt="" width="100" height="100" loading="eager" decoding="async">
+            <img class="home-orbit__mon home-orbit__mon_f" data-cry-id="410" src="https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/home/410.png" alt="" width="100" height="100" loading="eager" decoding="async">
+          </div>
+        </div>
+      </section>
+
+      <section class="home-section" id="o-que-faz">
+        <div class="home-section__head">
+          <h2 data-i18n="home_features_title"></h2>
+          <p data-i18n="home_features_lead"></p>
+        </div>
+
+        <div class="home-feature-grid">
+          <a class="home-tile" href="dex/" data-accent="dex">
+            <h3 data-i18n="home_feat_dex_title"></h3>
+            <p data-i18n="home_feat_dex_body"></p>
+            <span class="home-tile__cta" data-i18n="home_feat_dex_cta"></span>
+          </a>
+
+          <a class="home-tile" href="maps/" data-accent="maps">
+            <h3 data-i18n="home_feat_maps_title"></h3>
+            <p data-i18n="home_feat_maps_body"></p>
+            <span class="home-tile__cta" data-i18n="home_feat_maps_cta"></span>
+          </a>
+
+          <a class="home-tile" href="plan/" data-accent="team">
+            <h3 data-i18n="home_feat_team_title"></h3>
+            <p data-i18n="home_feat_team_body"></p>
+            <span class="home-tile__cta" data-i18n="home_feat_team_cta"></span>
+          </a>
+
+          <a class="home-tile" href="roms/" data-accent="roms">
+            <h3 data-i18n="home_feat_roms_title"></h3>
+            <p data-i18n="home_feat_roms_body"></p>
+            <span class="home-tile__cta" data-i18n="home_feat_roms_cta"></span>
+          </a>
+        </div>
+      </section>
+
+      <section class="home-closer">
+        <h2 data-i18n="home_closer_title"></h2>
+        <p data-i18n="home_closer_body"></p>
+        <div class="home-cta">
+          <a class="btn home-cta__primary" href="dex/" data-i18n="home_cta_dex"></a>
+          <a class="btn btn_ghost" href="donate/" data-i18n="donate_cta"></a>
+        </div>
       </section>
     </main>
   </div>

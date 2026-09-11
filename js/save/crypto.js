@@ -23,6 +23,17 @@ function w16le(v, i, n) {
   v[i] = n & 0xff;
   v[i + 1] = (n >> 8) & 0xff;
 }
+function w32le(v, i, n) {
+  const x = n >>> 0;
+  v[i] = x & 0xff;
+  v[i + 1] = (x >> 8) & 0xff;
+  v[i + 2] = (x >> 16) & 0xff;
+  v[i + 3] = (x >> 24) & 0xff;
+}
+function w16be(v, i, n) {
+  v[i] = (n >> 8) & 0xff;
+  v[i + 1] = n & 0xff;
+}
 
 function crypt_array(data, seed) {
   // XOR every u16 with LCRNG
@@ -49,13 +60,27 @@ function crypt_array3(data, seed) {
   }
 }
 
-function shuffle_blocks(data, sv, blockSize) {
+/** Decrypt order: place encrypted block order[b] into canonical slot b. */
+function unshuffle_blocks(data, sv, blockSize) {
   if (sv === 0) return;
   const order = BLOCK_POSITION.slice(sv * 4, sv * 4 + 4);
   const tmp = new Uint8Array(data.length);
   for (let b = 0; b < 4; b++) {
     const src = order[b] * blockSize;
     const dst = b * blockSize;
+    tmp.set(data.subarray(src, src + blockSize), dst);
+  }
+  data.set(tmp);
+}
+
+/** Encrypt order: place canonical slot b into encrypted position order[b]. */
+function shuffle_blocks(data, sv, blockSize) {
+  if (sv === 0) return;
+  const order = BLOCK_POSITION.slice(sv * 4, sv * 4 + 4);
+  const tmp = new Uint8Array(data.length);
+  for (let b = 0; b < 4; b++) {
+    const src = b * blockSize;
+    const dst = order[b] * blockSize;
     tmp.set(data.subarray(src, src + blockSize), dst);
   }
   data.set(tmp);
@@ -69,7 +94,26 @@ export function decrypt3(data) {
   const sv = pid % 24;
   const shuffle = data.subarray(SIZE_3HEADER, SIZE_3STORED);
   crypt_array3(shuffle, seed);
+  unshuffle_blocks(shuffle, sv, SIZE_3BLOCK);
+}
+
+/** Checksum of Gen3 data blocks (Growth..Misc), written at 0x1C. */
+export function pk3_checksum(data) {
+  let sum = 0;
+  for (let i = SIZE_3HEADER; i < SIZE_3STORED; i += 2) sum = (sum + u16le(data, i)) & 0xffff;
+  return sum;
+}
+
+/** Encrypt decrypted Gen3 entity in-place (sets checksum first). */
+export function encrypt3(data) {
+  w16le(data, 0x1c, pk3_checksum(data));
+  const pid = u32le(data, 0);
+  const oid = u32le(data, 4);
+  const seed = (pid ^ oid) >>> 0;
+  const sv = pid % 24;
+  const shuffle = data.subarray(SIZE_3HEADER, SIZE_3STORED);
   shuffle_blocks(shuffle, sv, SIZE_3BLOCK);
+  crypt_array3(shuffle, seed);
 }
 
 export function is_encrypted3(data) {
@@ -90,7 +134,26 @@ export function decrypt45(data) {
   const shuffle = data.subarray(8, SIZE_4STORED);
   crypt_array(shuffle, chk);
   if (data.length > SIZE_4STORED) crypt_array(data.subarray(SIZE_4STORED), pv);
+  unshuffle_blocks(shuffle, sv, SIZE_4BLOCK);
+}
+
+/** Checksum of Gen4/5 blocks 0x08..0x87. */
+export function pk45_checksum(data) {
+  let sum = 0;
+  for (let i = 8; i < SIZE_4STORED; i += 2) sum = (sum + u16le(data, i)) & 0xffff;
+  return sum;
+}
+
+/** Encrypt decrypted Gen4/5 entity in-place (sets checksum first). */
+export function encrypt45(data) {
+  const chk = pk45_checksum(data);
+  w16le(data, 6, chk);
+  const pv = u32le(data, 0);
+  const sv = (pv >>> 13) & 31;
+  const shuffle = data.subarray(8, SIZE_4STORED);
   shuffle_blocks(shuffle, sv, SIZE_4BLOCK);
+  crypt_array(shuffle, chk);
+  if (data.length > SIZE_4STORED) crypt_array(data.subarray(SIZE_4STORED), pv);
 }
 
 export function is_encrypted45(data) {
@@ -137,4 +200,4 @@ export const SIZE = {
   G5_STORED: 136,
 };
 
-export { u16le, u32le, w16le };
+export { u16le, u32le, w16le, w32le, w16be };

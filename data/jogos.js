@@ -90,10 +90,10 @@ export function pokemon_no_jogo(slug, id, dexSlug = "") {
 
 function lang_curto() {
   try {
-    return localStorage.getItem("caraio_lang") === "en" ? "en" : "pt";
-  } catch (_) {
-    return "pt";
-  }
+    const v = localStorage.getItem("caraio_lang");
+    if (v === "en" || v === "ja" || v === "pt") return v;
+  } catch (_) {}
+  return "pt";
 }
 
 /** rótulo localizado da variação de Pokédex */
@@ -145,6 +145,11 @@ export const JOGOS = [
   {
     slug: "rby",
     name: "Red / Blue / Yellow",
+    names: {
+      en: "Red / Blue / Yellow",
+      pt: "Red / Blue / Yellow",
+      ja: "赤・緑・青・ピカチュウ",
+    },
     gen: 1,
     region: "kanto",
     versions: ["red", "blue", "yellow"],
@@ -153,6 +158,11 @@ export const JOGOS = [
   {
     slug: "gsc",
     name: "Gold / Silver / Crystal",
+    names: {
+      en: "Gold / Silver / Crystal",
+      pt: "Gold / Silver / Crystal",
+      ja: "金・銀・クリスタル",
+    },
     gen: 2,
     region: "johto",
     versions: ["gold", "silver", "crystal"],
@@ -161,6 +171,11 @@ export const JOGOS = [
   {
     slug: "rse",
     name: "Ruby / Sapphire / Emerald",
+    names: {
+      en: "Ruby / Sapphire / Emerald",
+      pt: "Ruby / Sapphire / Emerald",
+      ja: "ルビー・サファイア・エメラルド",
+    },
     gen: 3,
     region: "hoenn",
     versions: ["ruby", "sapphire", "emerald"],
@@ -169,6 +184,11 @@ export const JOGOS = [
   {
     slug: "frlg",
     name: "FireRed / LeafGreen",
+    names: {
+      en: "FireRed / LeafGreen",
+      pt: "FireRed / LeafGreen",
+      ja: "ファイアレッド・リーフグリーン",
+    },
     gen: 3,
     region: "kanto",
     versions: ["firered", "leafgreen"],
@@ -177,6 +197,11 @@ export const JOGOS = [
   {
     slug: "dppt",
     name: "Diamond / Pearl / Platinum",
+    names: {
+      en: "Diamond / Pearl / Platinum",
+      pt: "Diamond / Pearl / Platinum",
+      ja: "ダイヤモンド・パール・プラチナ",
+    },
     gen: 4,
     region: "sinnoh",
     versions: ["diamond", "pearl", "platinum"],
@@ -185,6 +210,11 @@ export const JOGOS = [
   {
     slug: "hgss",
     name: "HeartGold / SoulSilver",
+    names: {
+      en: "HeartGold / SoulSilver",
+      pt: "HeartGold / SoulSilver",
+      ja: "ハートゴールド・ソウルシルバー",
+    },
     gen: 4,
     region: "johto",
     versions: ["heartgold", "soulsilver"],
@@ -193,6 +223,11 @@ export const JOGOS = [
   {
     slug: "bw",
     name: "Black / White",
+    names: {
+      en: "Black / White",
+      pt: "Black / White",
+      ja: "ブラック・ホワイト",
+    },
     gen: 5,
     region: "unova",
     versions: ["black", "white"],
@@ -201,6 +236,11 @@ export const JOGOS = [
   {
     slug: "b2w2",
     name: "Black 2 / White 2",
+    names: {
+      en: "Black 2 / White 2",
+      pt: "Black 2 / White 2",
+      ja: "ブラック2・ホワイト2",
+    },
     gen: 5,
     region: "unova",
     versions: ["black-2", "white-2"],
@@ -209,6 +249,7 @@ export const JOGOS = [
   {
     slug: "xy",
     name: "X / Y",
+    names: { en: "X / Y", pt: "X / Y", ja: "X・Y" },
     gen: 6,
     region: "kalos",
     versions: ["x", "y"],
@@ -217,6 +258,11 @@ export const JOGOS = [
   {
     slug: "oras",
     name: "Omega Ruby / Alpha Sapphire",
+    names: {
+      en: "Omega Ruby / Alpha Sapphire",
+      pt: "Omega Ruby / Alpha Sapphire",
+      ja: "オメガルビー・アルファサファイア",
+    },
     gen: 6,
     region: "hoenn",
     versions: ["omega-ruby", "alpha-sapphire"],
@@ -225,6 +271,11 @@ export const JOGOS = [
   {
     slug: "sm",
     name: "Sun / Moon",
+    names: {
+      en: "Sun / Moon",
+      pt: "Sun / Moon",
+      ja: "サン・ムーン",
+    },
     gen: 7,
     region: "alola",
     versions: ["sun", "moon"],
@@ -233,6 +284,11 @@ export const JOGOS = [
   {
     slug: "usum",
     name: "Ultra Sun / Ultra Moon",
+    names: {
+      en: "Ultra Sun / Ultra Moon",
+      pt: "Ultra Sun / Ultra Moon",
+      ja: "ウルトラサン・ウルトラムーン",
+    },
     gen: 7,
     region: "alola",
     versions: ["ultra-sun", "ultra-moon"],
@@ -241,6 +297,11 @@ export const JOGOS = [
   {
     slug: "swsh",
     name: "Sword / Shield",
+    names: {
+      en: "Sword / Shield",
+      pt: "Sword / Shield",
+      ja: "ソード・シールド",
+    },
     gen: 8,
     region: "galar",
     versions: ["sword", "shield"],
@@ -249,6 +310,11 @@ export const JOGOS = [
   {
     slug: "bdsp",
     name: "Brilliant Diamond / Shining Pearl",
+    names: {
+      en: "Brilliant Diamond / Shining Pearl",
+      pt: "Brilliant Diamond / Shining Pearl",
+      ja: "ブリリアントダイヤモンド・シャイニングパール",
+    },
     gen: 8,
     region: "sinnoh",
     versions: ["brilliant-diamond", "shining-pearl"],
@@ -257,6 +323,11 @@ export const JOGOS = [
   {
     slug: "sv",
     name: "Scarlet / Violet",
+    names: {
+      en: "Scarlet / Violet",
+      pt: "Scarlet / Violet",
+      ja: "スカーレット・バイオレット",
+    },
     gen: 9,
     region: "paldea",
     versions: ["scarlet", "violet"],
@@ -266,6 +337,15 @@ export const JOGOS = [
 
 export function jogo_por_slug(slug) {
   return JOGOS.find((j) => j.slug === slug) || null;
+}
+
+/** rótulo localizado do jogo (selects, displays, etc.) */
+export function rotulo_jogo(slugOrJogo) {
+  const j =
+    typeof slugOrJogo === "string" ? jogo_por_slug(slugOrJogo) : slugOrJogo;
+  if (!j) return typeof slugOrJogo === "string" ? slugOrJogo : "";
+  const lang = lang_curto();
+  return j.names?.[lang] || j.name || j.slug;
 }
 
 /** version-groups da PokéAPI pro movepool deste jogo */
@@ -300,6 +380,76 @@ export const TIPOS = [
   "steel",
   "fairy",
 ];
+
+/** nomes oficiais dos tipos (JA) / comuns (PT/EN) */
+const TIPO_NOMES = {
+  en: {
+    normal: "Normal",
+    fire: "Fire",
+    water: "Water",
+    electric: "Electric",
+    grass: "Grass",
+    ice: "Ice",
+    fighting: "Fighting",
+    poison: "Poison",
+    ground: "Ground",
+    flying: "Flying",
+    psychic: "Psychic",
+    bug: "Bug",
+    rock: "Rock",
+    ghost: "Ghost",
+    dragon: "Dragon",
+    dark: "Dark",
+    steel: "Steel",
+    fairy: "Fairy",
+  },
+  pt: {
+    normal: "Normal",
+    fire: "Fogo",
+    water: "Água",
+    electric: "Elétrico",
+    grass: "Grama",
+    ice: "Gelo",
+    fighting: "Lutador",
+    poison: "Venenoso",
+    ground: "Terra",
+    flying: "Voador",
+    psychic: "Psíquico",
+    bug: "Inseto",
+    rock: "Pedra",
+    ghost: "Fantasma",
+    dragon: "Dragão",
+    dark: "Sombrio",
+    steel: "Aço",
+    fairy: "Fada",
+  },
+  ja: {
+    normal: "ノーマル",
+    fire: "ほのお",
+    water: "みず",
+    electric: "でんき",
+    grass: "くさ",
+    ice: "こおり",
+    fighting: "かくとう",
+    poison: "どく",
+    ground: "じめん",
+    flying: "ひこう",
+    psychic: "エスパー",
+    bug: "むし",
+    rock: "いわ",
+    ghost: "ゴースト",
+    dragon: "ドラゴン",
+    dark: "あく",
+    steel: "はがね",
+    fairy: "フェアリー",
+  },
+};
+
+export function rotulo_tipo(type) {
+  const lang = lang_curto();
+  const key = String(type || "").toLowerCase();
+  return TIPO_NOMES[lang]?.[key] || TIPO_NOMES.en[key] || type;
+}
 
 /** chart gen6+ — quem ataca (row) vs defensor; multiplicador */
 export const TYPE_CHART = {

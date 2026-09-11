@@ -163,6 +163,7 @@ export function nome_localizado(lista, fallback = "") {
   const want = api_lang_tag();
   const hit =
     lista.find((n) => n.language?.name === want) ||
+    (want === "ja" ? lista.find((n) => n.language?.name === "ja-hrkt") : null) ||
     lista.find((n) => n.language?.name === "en");
   return hit?.name || fallback;
 }
@@ -170,7 +171,10 @@ export function nome_localizado(lista, fallback = "") {
 export function flavor_localizado(entries) {
   if (!Array.isArray(entries) || !entries.length) return "";
   const want = api_lang_tag();
-  const pool = entries.filter((e) => e.language?.name === want);
+  let pool = entries.filter((e) => e.language?.name === want);
+  if (!pool.length && want === "ja") {
+    pool = entries.filter((e) => e.language?.name === "ja-hrkt");
+  }
   const en = entries.filter((e) => e.language?.name === "en");
   const pick = (pool.length ? pool : en).at(-1);
   return (pick?.flavor_text || "").replace(/\f|\n|\r/g, " ");

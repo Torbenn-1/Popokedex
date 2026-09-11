@@ -9,11 +9,11 @@ import {
 } from "./buceta_api.js";
 import { capitalize } from "./boot.js";
 import { sprite_mode, art_src, art_onerror_attr, form_art_src, form_art_onerror_attr, form_art_urls } from "./sprite_mode.js";
-import { TIPOS, mult_ataque } from "../data/jogos.js";
+import { TIPOS, mult_ataque, rotulo_tipo } from "../data/jogos.js";
 import { type_icon_html } from "./type_icons.js";
 
 function type_pill(type) {
-  return `<span class="type-pill" data-type="${type}" style="background:var(--type-${type})">${type}</span>`;
+  return `<span class="type-pill" data-type="${type}" style="background:var(--type-${type})">${rotulo_tipo(type)}</span>`;
 }
 
 function flatten_evo(chain, out = []) {

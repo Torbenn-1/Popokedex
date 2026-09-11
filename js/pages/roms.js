@@ -4,6 +4,24 @@ import { monta_shell } from "../boot.js";
 import { t } from "../i18n.js";
 import { inspect_buffer, fmt_bytes, hex_at } from "../save_inspect.js";
 import { art3d_url, artwork_url, sprite_url } from "../buceta_api.js";
+import {
+  ensure_slim,
+  load_builder_team_for_gen,
+  write_party,
+  download_bytes,
+  patched_name,
+  move_slug_from_id,
+  resolve_move_token,
+} from "../save/write.js";
+import { NATURES, rotulo_nature } from "../../data/natures_items.js";
+import { normaliza_ivs, normaliza_evs, ivs_default, evs_default } from "../team_stats.js";
+import { normaliza_moves } from "../team_moves.js";
+import {
+  html_trainer_card,
+  baixa_trainer_card_html,
+  baixa_trainer_card_png,
+  badge_list,
+} from "../trainer_card.js";
 
 monta_shell({ active: "roms" });
 
@@ -96,16 +114,16 @@ function chip(text, tone = "") {
 }
 
 function art_for(mon) {
-  const id = mon?.dexId;
+  const id = mon?.spriteId || mon?.dexId;
   if (!id) {
     return `<div class="roms-mon__art roms-mon__art_empty" aria-hidden="true"></div>`;
   }
   const shiny = !!mon.shiny;
   const src = art3d_url(id, { shiny });
-  const fb = artwork_url(id, { shiny });
+  const fb = artwork_url(mon.dexId, { shiny }); // official-artwork often only has base
   const fb2 = sprite_url(id, { shiny });
   return `<img class="roms-mon__art${shiny ? " roms-mon__art_shiny" : ""}" src="${src}" alt="" loading="lazy"
-    onerror="if(!this.dataset.fb){this.dataset.fb='1';this.src='${fb}'}else if(this.dataset.fb==='1'){this.dataset.fb='2';this.src='${fb2}'}">`;
+    onerror="if(!this.dataset.fb){this.dataset.fb='1';this.src='${fb2}'}else if(this.dataset.fb==='1'){this.dataset.fb='2';this.src='${fb}'}">`;
 }
 
 function paint_filebar() {
@@ -177,7 +195,26 @@ function paint_overview() {
       ? `${s.playtime.hours}h ${String(s.playtime.minutes).padStart(2, "0")}m ${String(s.playtime.seconds).padStart(2, "0")}s`
       : "—";
 
+  const earned = badge_list(s);
+  const badgeBlock = earned.length
+    ? `<div class="roms-badges">${earned.map((b) => `<span class="roms-badge-pill">${esc(b)}</span>`).join("")}</div>`
+    : s.badgesJohto != null || s.badgesKanto != null
+      ? `<p class="muted">${t("roms_badges_g2")}: ${s.badgesJohto ?? 0} Johto · ${s.badgesKanto ?? 0} Kanto</p>`
+      : `<p class="muted">—</p>`;
+
   viewOverview.innerHTML = `
+    <div class="roms-tcard-row">
+      <div class="roms-tcard-panel">
+        <div class="roms-tcard-actions">
+          <h2 class="section-title">${t("tcard_title")}</h2>
+          <div class="roms-tcard-btns">
+            <button type="button" class="btn btn_ghost" id="btn-tcard-html">${t("tcard_download_html")}</button>
+            <button type="button" class="btn" id="btn-tcard-png">${t("tcard_download")}</button>
+          </div>
+        </div>
+        <div id="tcard-host">${html_trainer_card(s)}</div>
+      </div>
+    </div>
     <div class="roms-overview-grid">
       <div class="panel">
         <h2 class="section-title">${t("roms_trainer")}</h2>
@@ -201,13 +238,7 @@ function paint_overview() {
       </div>
       <div class="panel">
         <h2 class="section-title">${t("roms_badges")}</h2>
-        ${
-          s.badges
-            ? `<div class="roms-badges">${s.badges.map((b) => `<span class="roms-badge-pill">${esc(b)}</span>`).join("") || `<span class="muted">—</span>`}</div>`
-            : s.badgesJohto != null || s.badgesKanto != null
-              ? `<p class="muted">${t("roms_badges_g2")}: ${s.badgesJohto ?? 0} Johto · ${s.badgesKanto ?? 0} Kanto</p>`
-              : `<p class="muted">—</p>`
-        }
+        ${badgeBlock}
         <dl class="roms-kv" style="margin-top:1rem">
           <div><dt>${t("roms_meta_size")}</dt><dd>${esc(fmt_bytes(report.size))}</dd></div>
           <div><dt>${t("roms_party_count")}</dt><dd>${s.partyCount ?? s.party?.length ?? 0} / 6</dd></div>
@@ -219,6 +250,15 @@ function paint_overview() {
         </dl>
       </div>
     </div>`;
+
+  const host = document.getElementById("tcard-host");
+  const cardEl = host?.querySelector(".tcard");
+  document.getElementById("btn-tcard-html")?.addEventListener("click", () => {
+    baixa_trainer_card_html(s);
+  });
+  document.getElementById("btn-tcard-png")?.addEventListener("click", () => {
+    baixa_trainer_card_png(cardEl, s);
+  });
 }
 
 function mon_card(m, i, { compact = false } = {}) {
@@ -368,9 +408,226 @@ function paint_hex() {
   });
 }
 
+function save_writable() {
+  const g = report?.save?.gen;
+  return g >= 1 && g <= 5;
+}
+
+function refresh_after_write(nextBytes) {
+  bytes = nextBytes;
+  report = inspect_buffer(bytes, {
+    name: fileName,
+    kindHint: mode === "roms" ? "rom" : "save",
+  });
+  activeBox = report.save?.currentBox ?? 0;
+  paint_all();
+  download_bytes(bytes, patched_name(fileName));
+}
+
+async function do_inject() {
+  if (!bytes || !save_writable()) {
+    alert(t("roms_inject_need_save"));
+    return;
+  }
+  try {
+    await ensure_slim();
+    const pack = load_builder_team_for_gen(report.save.gen);
+    if (!pack.team.length) {
+      alert(t("roms_inject_need_team"));
+      return;
+    }
+    const mons = pack.team.map((p) => ({
+      id: p.id,
+      slug: p.slug,
+      name: p.name,
+      nickname: p.name,
+      shiny: !!p.shiny,
+      nature: p.nature || "hardy",
+      item: p.item || "",
+      ivs: normaliza_ivs(p.ivs),
+      evs: normaliza_evs(p.evs),
+      moves: normaliza_moves(p.moves),
+      level: 50,
+    }));
+    const next = write_party(bytes, report.save, mons);
+    refresh_after_write(next);
+    alert(t("roms_inject_ok"));
+  } catch (err) {
+    console.error(err);
+    alert(`${t("roms_inject_err")} ${err?.message || err}`);
+  }
+}
+
+function editor_mons_from_form(root) {
+  const cards = [...root.querySelectorAll("[data-edit-slot]")];
+  return cards.map((card) => {
+    const dexId = Number(card.dataset.dexId) || 0;
+    const slug = card.dataset.slug || "";
+    const nick = card.querySelector("[data-nick]")?.value?.trim() || "";
+    const level = Number(card.querySelector("[data-level]")?.value) || 50;
+    const shiny = !!card.querySelector("[data-shiny]")?.checked;
+    const nature = card.querySelector("[data-nature]")?.value || "hardy";
+    const item = card.querySelector("[data-item]")?.value?.trim() || "";
+    const movesRaw = card.querySelector("[data-moves]")?.value || "";
+    const moveToks = movesRaw
+      .split(/[,;]+/)
+      .map((s) => s.trim())
+      .filter(Boolean)
+      .slice(0, 4);
+    const moves = moveToks.map((tok) => {
+      const id = resolve_move_token(tok);
+      return id ? { slug: move_slug_from_id(id), id } : null;
+    });
+    const ivs = { ...ivs_default() };
+    const evs = { ...evs_default() };
+    for (const k of ["hp", "atk", "def", "spa", "spd", "spe"]) {
+      const ivEl = card.querySelector(`[data-iv-${k}]`);
+      const evEl = card.querySelector(`[data-ev-${k}]`);
+      if (ivEl) ivs[k] = Number(ivEl.value) || 0;
+      if (evEl) evs[k] = Number(evEl.value) || 0;
+    }
+    return {
+      id: dexId,
+      dexId,
+      slug,
+      name: nick || slug,
+      nickname: nick,
+      level,
+      shiny,
+      nature,
+      item,
+      ivs: normaliza_ivs(ivs),
+      evs: normaliza_evs(evs),
+      moves,
+    };
+  });
+}
+
+async function do_apply_edits() {
+  if (!bytes || !save_writable()) {
+    alert(t("roms_edit_need_save"));
+    return;
+  }
+  const root = viewTools.querySelector("[data-edit-root]");
+  if (!root) return;
+  try {
+    await ensure_slim();
+    const mons = editor_mons_from_form(root);
+    if (!mons.length) {
+      alert(t("roms_edit_empty"));
+      return;
+    }
+    const next = write_party(bytes, report.save, mons);
+    refresh_after_write(next);
+    alert(t("roms_edit_ok"));
+  } catch (err) {
+    console.error(err);
+    alert(`${t("roms_inject_err")} ${err?.message || err}`);
+  }
+}
+
 function paint_tools() {
   const hasParty = !!report?.save?.party?.length;
   const hasBoxes = !!report?.save?.boxes?.length;
+  const canWrite = save_writable();
+  let injectBody = t("roms_tool_inject_body");
+  let injectBadge = t("roms_status_soon");
+  let injectBadgeOn = false;
+  let teamPreview = "";
+  if (canWrite) {
+    const pack = load_builder_team_for_gen(report.save.gen);
+    if (pack.team.length) {
+      injectBadge = t("roms_status_ready");
+      injectBadgeOn = true;
+      injectBody = `${t("roms_inject_preview")} ${pack.team.length} (${esc(pack.gameSlug || "—")}).`;
+      teamPreview = `<ol class="roms-inject-list">${pack.team
+        .map((p) => `<li>${esc(p.name || p.slug)}</li>`)
+        .join("")}</ol>
+        <button type="button" class="btn" data-inject>${t("roms_inject_go")}</button>`;
+    } else {
+      // Feature is live — missing team, not "coming soon"
+      injectBadge = t("roms_status_need_team");
+      injectBadgeOn = false;
+      injectBody = t("roms_inject_need_team");
+      teamPreview = `<p class="roms-inject-cta"><a class="btn btn_ghost" href="../plan/">${t(
+        "roms_inject_need_team_link"
+      )}</a></p>`;
+    }
+  } else if (report?.save) {
+    injectBody = t("roms_inject_need_save");
+    injectBadge = t("roms_status_soon");
+  } else {
+    injectBadge = t("roms_status_ready");
+    injectBadgeOn = true;
+    injectBody = t("roms_tool_inject_body");
+  }
+
+  const gen = report?.save?.gen || 0;
+  const modern = gen >= 3;
+  let editHtml = `<p class="muted">${t("roms_edit_need_save")}</p>`;
+  if (canWrite) {
+    const party = report.save.party || [];
+    if (!party.length) {
+      editHtml = `<p class="muted">${t("roms_edit_empty")}</p>`;
+    } else {
+      editHtml = `<div data-edit-root class="roms-edit">
+        ${party
+          .map((m, i) => {
+            const moves = (m.moves || [])
+              .map((id) => (typeof id === "number" ? move_slug_from_id(id) : id?.slug || ""))
+              .filter(Boolean)
+              .join(", ");
+            // Prefer slug labels when we only have IDs — user can paste slugs
+            const iv = m.ivs || ivs_default();
+            const ev = m.evs || evs_default();
+            const natureOpts = NATURES.map(
+              (n) =>
+                `<option value="${n.slug}"${n.slug === (m.nature || "hardy") ? " selected" : ""}>${rotulo_nature(n.slug)}</option>`
+            ).join("");
+            return `<div class="roms-edit-card" data-edit-slot="${i}" data-dex-id="${m.dexId || 0}" data-slug="${esc(m.slug || "")}">
+              <strong>#${m.dexId || "?"} ${esc(m.speciesName || m.slug || "")}</strong>
+              <label class="roms-edit-field"><span>${t("roms_edit_nick")}</span>
+                <input data-nick value="${esc(m.nickname || "")}" maxlength="10" /></label>
+              <label class="roms-edit-field"><span>${t("roms_edit_level")}</span>
+                <input data-level type="number" min="1" max="100" value="${m.level || 50}" /></label>
+              <label class="roms-edit-check"><input data-shiny type="checkbox"${m.shiny ? " checked" : ""}/> ${t("roms_edit_shiny")}</label>
+              ${
+                modern
+                  ? `<label class="roms-edit-field"><span>${t("nature")}</span><select data-nature>${natureOpts}</select></label>
+                     <label class="roms-edit-field"><span>${t("held_item")}</span>
+                       <input data-item value="${esc(m.item || "")}" placeholder="leftovers" /></label>`
+                  : `<input type="hidden" data-nature value="hardy" /><input type="hidden" data-item value="" />`
+              }
+              <label class="roms-edit-field"><span>${t("roms_edit_moves")}</span>
+                <input data-moves value="${esc(moves)}" /></label>
+              ${
+                modern
+                  ? `<div class="roms-edit-stats muted">IV
+                      ${["hp", "atk", "def", "spa", "spd", "spe"]
+                        .map(
+                          (k) =>
+                            `<input data-iv-${k} type="number" min="0" max="31" value="${iv[k] ?? (iv.spc != null && k === "spa" ? iv.spc : 31)}" title="IV ${k}" />`
+                        )
+                        .join("")}
+                    </div>
+                    <div class="roms-edit-stats muted">EV
+                      ${["hp", "atk", "def", "spa", "spd", "spe"]
+                        .map(
+                          (k) =>
+                            `<input data-ev-${k} type="number" min="0" max="252" value="${ev[k] ?? 0}" title="EV ${k}" />`
+                        )
+                        .join("")}
+                    </div>`
+                  : ""
+              }
+            </div>`;
+          })
+          .join("")}
+        <button type="button" class="btn" data-apply-edits>${t("roms_edit_apply")}</button>
+      </div>`;
+    }
+  }
+
   viewTools.innerHTML = `
     <div class="panel">
       <h2 class="section-title">${t("roms_view_tools")}</h2>
@@ -396,22 +653,30 @@ function paint_tools() {
           </div>
           <span class="roms-badge${hasBoxes ? " roms-badge_on" : ""}">${hasBoxes ? t("roms_status_ready") : t("roms_status_soon")}</span>
         </li>
-        <li class="roms-tool">
+        <li class="roms-tool roms-tool_stack">
           <div>
             <strong>${t("roms_tool_inject")}</strong>
-            <p class="muted">${t("roms_tool_inject_body")}</p>
+            <p class="muted">${injectBody}</p>
+            ${teamPreview}
           </div>
-          <span class="roms-badge">${t("roms_status_later")}</span>
+          <span class="roms-badge${injectBadgeOn ? " roms-badge_on" : ""}">${injectBadge}</span>
         </li>
-        <li class="roms-tool">
+        <li class="roms-tool roms-tool_stack">
           <div>
             <strong>${t("roms_tool_rom_patch")}</strong>
             <p class="muted">${t("roms_tool_rom_patch_body")}</p>
+            <h3 class="roms-edit-heading">${t("roms_edit_title")}</h3>
+            ${editHtml}
           </div>
-          <span class="roms-badge">${t("roms_status_later")}</span>
+          <span class="roms-badge${canWrite && hasParty ? " roms-badge_on" : ""}">${
+            canWrite && hasParty ? t("roms_status_ready") : t("roms_status_soon")
+          }</span>
         </li>
       </ul>
     </div>`;
+
+  viewTools.querySelector("[data-inject]")?.addEventListener("click", () => do_inject());
+  viewTools.querySelector("[data-apply-edits]")?.addEventListener("click", () => do_apply_edits());
 }
 
 function paint_all() {

@@ -81,6 +81,11 @@ def slim_one(pid: int) -> dict:
             "pt": pick_name(sp.get("names", []), "pt-BR")
             or pick_name(sp.get("names", []), "pt-br")
             or pick_name(sp.get("names", []), "en"),
+            "ja": pick_name(sp.get("names", []), "ja")
+            or pick_name(sp.get("names", []), "ja-hrkt")
+            or pick_name(sp.get("names", []), "en"),
+            "ja-roma": pick_name(sp.get("names", []), "ja-roma")
+            or pick_name(sp.get("names", []), "en"),
         },
         "types": types,
         "stats": {
@@ -96,6 +101,9 @@ def slim_one(pid: int) -> dict:
             "en": pick_name(genera, "en"),
             "pt": pick_name(genera, "pt-BR")
             or pick_name(genera, "pt-br")
+            or pick_name(genera, "en"),
+            "ja": pick_name(genera, "ja")
+            or pick_name(genera, "ja-hrkt")
             or pick_name(genera, "en"),
         },
     }

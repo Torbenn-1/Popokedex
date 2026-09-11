@@ -4,6 +4,7 @@ import { SIZE } from "./crypto.js";
 import { decode_gen12 } from "./strings.js";
 import { national_name, national_slug } from "./national_slugs.js";
 import { shiny_from_dvs } from "./shiny.js";
+import { apply_unown_fields, unown_form_gen2, UNOWN_DEX } from "./unown.js";
 
 function u8(v, i) {
   return v[i] ?? 0;
@@ -55,6 +56,7 @@ function parse_mon(v, base, party) {
     shiny: shiny_from_dvs(ivs),
     boxed: !party,
   };
+  if (dexId === UNOWN_DEX) apply_unown_fields(mon, unown_form_gen2(ivs));
   if (party) {
     mon.hp = u16be(v, base + 0x22);
     mon.maxHp = u16be(v, base + 0x24);
@@ -94,6 +96,7 @@ function parse_list(v, off, capacity, party) {
       mon.slug = national_slug(speciesList);
       mon.speciesName = national_name(speciesList);
     }
+    if (mon.dexId === UNOWN_DEX) apply_unown_fields(mon, unown_form_gen2(mon.ivs));
     mon.nickname = decode_gen12(v, nickBase + i * 11);
     mon.ot = decode_gen12(v, otBase + i * 11);
     mons.push(mon);
@@ -105,6 +108,30 @@ const BOX_LIST = 1102;
 const BOX_STRIDE = BOX_LIST + 2; // 1104
 const BOX_COUNT = 14;
 const SPLIT = 7;
+
+/** English GS/C: time played @ 0x2053 (hh, mm, ss, frames). */
+const PLAYTIME = 0x2053;
+
+const JOHTO_BADGES = [
+  "Zephyr",
+  "Hive",
+  "Plain",
+  "Fog",
+  "Storm",
+  "Mineral",
+  "Glacier",
+  "Rising",
+];
+const KANTO_BADGES = [
+  "Boulder",
+  "Cascade",
+  "Thunder",
+  "Rainbow",
+  "Soul",
+  "Marsh",
+  "Volcano",
+  "Earth",
+];
 
 function box_offset(i) {
   if (i < SPLIT) return 0x4000 + i * BOX_STRIDE;
@@ -162,8 +189,17 @@ export function parse_gen2(v) {
   const currentBox = u8(v, profile.currentBoxIndex) & 0x7f;
   const money =
     (u8(v, profile.money) << 16) | (u8(v, profile.money + 1) << 8) | u8(v, profile.money + 2);
-  const badgesJohto = [...Array(8)].filter((_, i) => u8(v, profile.badges) & (1 << i)).length;
-  const badgesKanto = [...Array(8)].filter((_, i) => u8(v, profile.badges + 1) & (1 << i)).length;
+  const johtoByte = u8(v, profile.badges);
+  const kantoByte = u8(v, profile.badges + 1);
+  const badgesJohtoNames = JOHTO_BADGES.filter((_, i) => johtoByte & (1 << i));
+  const badgesKantoNames = KANTO_BADGES.filter((_, i) => kantoByte & (1 << i));
+  const badgesJohto = badgesJohtoNames.length;
+  const badgesKanto = badgesKantoNames.length;
+  const playtime = {
+    hours: u8(v, PLAYTIME),
+    minutes: u8(v, PLAYTIME + 1),
+    seconds: u8(v, PLAYTIME + 2),
+  };
 
   const boxes = [];
   for (let i = 0; i < BOX_COUNT; i++) {
@@ -189,6 +225,9 @@ export function parse_gen2(v) {
     money,
     badgesJohto,
     badgesKanto,
+    badgesJohtoNames,
+    badgesKantoNames,
+    playtime,
     partyCount: partyList.count,
     party: partyList.mons,
     currentBox: currentBox > 13 ? 0 : currentBox,
